@@ -1,0 +1,53 @@
+.review-list {
+    max-width: 600px;
+    margin: 1.5rem auto;
+    font-family: Georgia, serif;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+.review-item {
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.75rem;
+    border: 1px solid #d8cfc0;
+    border-left: 4px solid #7b4b2a;
+    border-radius: 4px;
+    background-color: #fbf7f0;
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.review-book {
+    font-weight: bold;
+}
+
+.review-rating {
+    color: #b8860b;
+    font-weight: bold;
+}
+
+.review-comment {
+    margin: 0.5rem 0;
+}
+
+.review-name {
+    color: #6b5d4d;
+    font-style: italic;
+    font-size: 0.9rem;
+}
+
+.count-message {
+    color: #2e6b4f;
+}
+
+.empty-message{
+    color: #a03030;
+    font-style: italic;
+}
+

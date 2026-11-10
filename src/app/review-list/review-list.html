@@ -1,0 +1,22 @@
+<section class="review-list">
+    <h2>Book Reviews</h2>
+
+@if (reviews.length > 0) {
+    <p class="count-message">{{ reviews.length }} reviews from club members.</p>
+}
+
+<ul>
+    @for (review of reviews; track review.id) {
+        <li class="review-item">
+            <div class="review-header">
+                <span class="review-book">{{ review.book }}</span>
+                <span class="review-rating">{{ review.rating }} / 5</span>
+            </div>
+            <p class="review-comment">{{ review.comment }}</p>
+            <span class="review-name"> Reviews by {{ review.name }}</span>
+        </li>
+    } @empty {
+        <li class="empty-message"> No reviews yet. Be the first to write one!</li>
+    }
+</ul>
+</section>
