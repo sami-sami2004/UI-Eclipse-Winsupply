@@ -1,0 +1,15 @@
+<div class="dashboard">
+    <h1 class="dashboardHeading">Bookish Dashboard</h1>
+    @if (books.length > 0) {
+        <p>Here are the available books</p>
+        <ul>
+        @for (book of books; track book.id){
+            <li>{{book.name}}</li>
+        }
+        </ul>
+    }
+    @else {
+        <p>No books found.</p>
+    }
+</div>
+
