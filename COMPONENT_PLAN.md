@@ -51,7 +51,8 @@ src/
         └── review-list.service.ts
 ```
 
-> [NOTE!] I already created this in homework 2 and just used the `tree` cmd to get what's above
+> [NOTE!]
+> I already created this in homework 2 and just used the `tree` cmd to get what's above
 
  ## Data Interfaces - Review
 
