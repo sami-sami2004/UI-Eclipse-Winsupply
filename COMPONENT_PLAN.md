@@ -2,7 +2,7 @@
 
 ## Team Task Distribution
 
-| Team Member              | Assigned Components  | Responsibilities                |
+| Team Member              | Components           | Responsibilities                |
 |--------------------------|----------------------|---------------------------------|
 | Member A - Prince Petal  | DashboardComponent   | Dashboard and statistics        |
 | Member B - Tylar Gossett | ReviewComponent      | Review management and display   |
@@ -27,7 +27,7 @@ src/
             └── CommentCardComponent (Child Component - Planned)
 ```
 
-## Review Component Tree
+## Review Component Tree 
 
 ```
 src/
@@ -49,5 +49,62 @@ src/
         ├── api.service.ts
         ├── lookup.service.ts
         └── review-list.service.ts
+```
+
+>NOTE! I already created this in homework 2 and just used the `tree` cmd to get whats above
+
+ ## Data Interfaces - Review
+
+| Component             | Input                             | Output                       |
+|-----------------------|-----------------------------------|------------------------------|
+| ReviewListComponent   | `Review[]` from ReviewListService | Displays review list         |
+| ReviewDetailComponent | Review ID and `Review` data       | Displays review details      |
+| ReviewCardComponent   | `Review` object                   | Emits review selection event |
+
+## Application Routes
+
+```
+import { Routes } from '@angular/router';
+
+export const routes: Routes = [
+  {
+    path: 'dashboard',
+    loadComponent: () =>
+      import('./dashboard/dashboard.component').then(
+        m => m.DashboardComponent
+      )
+  },
+
+  {
+    path: 'review',
+    children: [
+      {
+        path: '',
+        redirectTo: 'list',
+        pathMatch: 'full'
+      },
+      {
+        path: 'list',
+        loadComponent: () =>
+            import('./review-list/review-list.component').then(
+            m => m.ReviewListComponent
+        )
+    }
+    ]
+},
+
+  // Default redirect
+  {
+    path: '',
+    redirectTo: '/dashboard',
+    pathMatch: 'full'
+  },
+
+  // Wildcard route - must be last
+  {
+    path: '**',
+    redirectTo: '/dashboard'
+  }
+]
 ```
 
