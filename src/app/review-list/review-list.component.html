@@ -1,23 +1,28 @@
-<!-- Review list -->
-<div class="review-order-list">
+
+<!-- Review List -->
+<div class="review-list">
+
   <!-- Header Card -->
   <div class="header-card">
     <div class="header-content">
       <h1 class="page-title">Reviews</h1>
+
       <div class="header-actions">
-        <a 
+        <a
           class="btn btn-outline-primary"
           routerLink="/dashboard">
           <span class="btn-icon" aria-hidden="true">←</span>
           Dashboard
         </a>
-        <a 
+
+        <a
           class="btn btn-success"
-          routerLink="/work-orders/create">
+          routerLink="/review/create">
           <span class="btn-icon" aria-hidden="true">+</span>
           Create Review
         </a>
-        <button 
+
+        <button
           class="btn btn-info"
           type="button"
           (click)="refreshList()"
@@ -28,83 +33,119 @@
       </div>
     </div>
   </div>
-    
+
   <!-- Search and Filters Card -->
   <div class="filters-card">
     <div class="card-header">
       <h2 class="card-title">Search & Filters</h2>
-      <button 
+
+      <button
         class="collapse-button"
         type="button"
         (click)="toggleFiltersCollapse()"
         [attr.aria-expanded]="!filtersCollapsed()"
         aria-label="Toggle filters">
-        <span class="collapse-icon" [class.collapsed]="filtersCollapsed()">▼</span>
+        <span
+          class="collapse-icon"
+          [class.collapsed]="filtersCollapsed()">▼</span>
       </button>
     </div>
-    <div class="card-body" [class.collapsed]="filtersCollapsed()">
+
+    <div class="card-body"
+         [class.collapsed]="filtersCollapsed()">
+
       <!-- Search Controls -->
       <div class="search-section">
         <div class="search-group">
-          <label for="search-input" class="search-label">Search Reviews</label>
+          <label for="search-input" class="search-label">
+            Search Reviews
+          </label>
+
           <div class="search-input-wrapper">
             <input
               id="search-input"
               type="text"
               class="form-control search-input"
-              placeholder="Search by title, description, rating, genre, or page count..."
+              placeholder="Search by review text, book ID, or rating..."
               [formControl]="searchControl"
               aria-describedby="search-help">
+
             <span class="search-icon">🔍</span>
           </div>
+
           <p id="search-help" class="search-help">
-            Matches title, description, rating, book genre, or page count.
+            Matches review text, book ID, or rating.
           </p>
         </div>
       </div>
-      
+
       <!-- Filter Controls -->
       <div class="filter-section">
         <div class="filter-grid">
+
+          <!-- Recommendation Filter -->
           <div class="filter-group">
-            <label for="status-filter" class="filter-label">Status</label>
-            <select 
-              id="status-filter"
+            <label for="recommendation-filter"
+                   class="filter-label">
+              Recommendation
+            </label>
+
+            <select
+              id="recommendation-filter"
               class="form-control filter-select"
-              [formControl]="statusFilter">
-              @for (option of statusOptions; track option.value) {
-                <option [value]="option.value">{{ option.label }}</option>
+              [formControl]="recommendationFilter">
+
+              @for (option of recommendationOptions; track option.value) {
+                <option [value]="option.value">
+                  {{ option.label }}
+                </option>
               }
             </select>
           </div>
-          
+
+          <!-- Rating Filter -->
           <div class="filter-group">
-            <label for="category-filter" class="filter-label">Category</label>
-            <select 
-              id="category-filter"
+            <label for="rating-filter"
+                   class="filter-label">
+              Rating
+            </label>
+
+            <select
+              id="rating-filter"
               class="form-control filter-select"
-              [formControl]="categoryFilter">
-              @for (option of categoryOptions(); track option.value) {
-                <option [value]="option.value">{{ option.label }}</option>
+              [formControl]="ratingFilter">
+
+              @for (option of ratingOptions; track option.value) {
+                <option [value]="option.value">
+                  {{ option.label }}
+                </option>
               }
             </select>
           </div>
-          
+
+          <!-- Sort -->
           <div class="filter-group">
-            <label for="sort-control" class="filter-label">Sort By</label>
-            <select 
+            <label for="sort-control"
+                   class="filter-label">
+              Sort By
+            </label>
+
+            <select
               id="sort-control"
               class="form-control filter-select"
               [formControl]="sortControl">
+
               @for (option of sortOptions; track option.value) {
-                <option [value]="option.value">{{ option.label }}</option>
+                <option [value]="option.value">
+                  {{ option.label }}
+                </option>
               }
             </select>
           </div>
         </div>
-        
+
         <div class="filter-actions">
-          <button 
+          <button
             class="btn btn-outline-danger"
             type="button"
             (click)="clearFilters()">
@@ -115,22 +156,37 @@
     </div>
   </div>
 
-  <!-- Loading State -->
+  <!-- 
+  <Loading State >
   @if (isLoading()) {
     <div class="loading-container">
-      <app-loading-spinner 
-        size="lg" 
+      <app-loading-spinner
+        size="lg"
         message="Loading reviews...">
       </app-loading-spinner>
     </div>
-  }
+  } 
+  -->
+
+  <!-- Loading State -->
+@if (isLoading()) {
+  <div class="loading-container">
+    <p>Loading reviews...</p>
+  </div>
+}
 
   <!-- Load Error -->
   @if (!isLoading() && errorMessage()) {
     <div class="content-card" role="alert">
       <div class="card-body">
         <p>{{ errorMessage() }}</p>
-        <button type="button" class="btn btn-primary" (click)="refreshList()">Retry</button>
+
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="refreshList()">
+          Retry
+        </button>
       </div>
     </div>
   }
@@ -138,182 +194,218 @@
   <!-- Reviews Content Card -->
   @if (!isLoading() && !errorMessage()) {
     <div class="content-card">
-    <div class="card-header">
-      <div class="card-title-section">
-        <h2 class="card-title">Reviews</h2>
-        <div class="results-count">
-          <span class="count-text">
-            @if (totalCount() > 0) {
-              Showing {{ startIndex() + 1 }} - {{ endIndex() }} of {{ totalCount() }} reviews
-            } @else {
-              Showing 0 reviews
-            }
-          </span>
-        </div>
-      </div>
-      <div class="card-actions">
-        <div class="page-size-selector">
-          <label for="page-size" class="page-size-label">Items per page:</label>
-          <select 
-            id="page-size"
-            class="form-control page-size-select"
-            [value]="pageSize()"
-            (change)="onPageSizeChange(+$any($event.target).value)">
-            <option value="5">5</option>
-            <option value="10">10</option>
-            <option value="25">25</option>
-            <option value="50">50</option>
-          </select>
-        </div>
-      </div>
-    </div>
 
-    <div class="card-body">
-      <!-- Reviews Cards -->
-      @if (filteredReviews().length > 0) {
-        <div class="review-grid">
-          @for (review of filteredReviews(); track trackByReviewId($index, review)) {
-            <div class="review-card">
-          
-          <!-- Card Header -->
-          <div class="review-header">
-            <div class="review-title-section">
-              <a 
-                [routerLink]="['/reviews', review.orderNumber]"
-                class="review-title">
-                {{ review.title ?? 'Untitled' }}
-              </a>
-              <div class="review-id">#{{ review.orderNumber }}</div>
-            </div>
-            <div class="review-status">
-              <app-status-badge
-                [status]="review.status?.code ?? ''"
-                size="sm">
-              </app-status-badge>
-            </div>
+      <div class="card-header">
+        <div class="card-title-section">
+          <h2 class="card-title">Reviews</h2>
+
+          <div class="results-count">
+            <span class="count-text">
+              @if (totalCount() > 0) {
+                Showing {{ startIndex() + 1 }} -
+                {{ endIndex() }} of
+                {{ totalCount() }} reviews
+              } @else {
+                Showing 0 reviews
+              }
+            </span>
           </div>
-          
-          <!-- Card Content -->
-          <div class="review-content">
-            <div class="review-details">
-              <div class="detail-row">
-                <span class="detail-label">Category:</span>
-                <span class="detail-value">{{ review.category?.description ?? 'Unknown' }}</span>
-              </div>
-              
-              <div class="detail-row">
-                <span class="detail-label">Book:</span>
-                <div class="book-content">
-                  <div class="rating-number">Rating {{ review.rating?.id?.ratingNumber }}</div>
-                  <div class="genre-name">Genre {{ review.rating?.id?.genreId }}</div>
-                  <div class="page-number"> Page Count{{ review.rating?.id?.pageNumber }}</div>
-                </div>
-              </div>
-              
-              <div class="detail-row">
-                <span class="detail-label">Assigned To:</span>
-                @if (workOrder.maintenanceTechnician) {
-                  <div class="assigned-content">
-                    <div class="assignee-name">{{ workOrder.maintenanceTechnician.firstName }} {{ workOrder.maintenanceTechnician.lastName }}</div>
-                    <div class="assignee-role">Code: {{ workOrder.maintenanceTechnician.code }}</div>
+        </div>
+
+        <div class="card-actions">
+          <div class="page-size-selector">
+            <label for="page-size"
+                   class="page-size-label">
+              Items per page:
+            </label>
+
+            <select
+              id="page-size"
+              class="form-control page-size-select"
+              [value]="pageSize()"
+              (change)="onPageSizeChange(+$any($event.target).value)">
+              <option value="5">5</option>
+              <option value="10">10</option>
+              <option value="25">25</option>
+              <option value="50">50</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-body">
+
+        <!-- Review Cards -->
+        @if (filteredReviews().length > 0) {
+          <div class="reviews-grid">
+
+            @for (review of filteredReviews(); track review.reviewId) {
+              <div class="review-card">
+
+                <!-- Card Header -->
+                <div class="review-header">
+                  <div class="review-title-section">
+                    <a
+                      [routerLink]="['/review', review.reviewId]"
+                      class="review-title">
+                      Review #{{ review.reviewId }}
+                    </a>
+
+                    <div class="review-id">
+                      Book #{{ review.bookId }}
+                    </div>
                   </div>
-                } @else {
-                  <span class="unassigned-text">Unassigned</span>
+
+                  <div class="review-status">
+                    <span
+                      class="status-chip"
+                      [class.status-chip--completed]="review.isRecommended"
+                      [class.status-chip--cancelled]="!review.isRecommended">
+
+                      <span class="status-chip__indicator"></span>
+
+                      <span class="status-chip__label">
+                        {{ review.isRecommended ? 'Recommended' : 'Not Recommended' }}
+                      </span>
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Card Content -->
+                <div class="review-content">
+                  <div class="review-details">
+
+                    <!-- Book -->
+                    <div class="detail-row">
+                      <span class="detail-label">Book:</span>
+                      <span class="detail-value">
+                        Book #{{ review.bookId }}
+                      </span>
+                    </div>
+
+                    <!-- Rating -->
+                    <div class="detail-row">
+                      <span class="detail-label">Rating:</span>
+                      <span class="detail-value">
+                        {{ review.rating }}/5 Stars
+                      </span>
+                    </div>
+
+                    <!-- Review Text -->
+                    <div class="detail-row">
+                      <span class="detail-label">Review:</span>
+                      <span class="detail-value">
+                        {{ review.reviewText }}
+                      </span>
+                    </div>
+
+                    <!-- Recommendation -->
+                    <div class="detail-row">
+                      <span class="detail-label">Recommended:</span>
+                      <span class="detail-value">
+                        {{ review.isRecommended ? 'Yes' : 'No' }}
+                      </span>
+                    </div>
+
+                    <!-- Date Posted -->
+                    <div class="detail-row">
+                      <span class="detail-label">Posted:</span>
+                      <div class="date-content">
+                        <div class="date-value">
+                          {{ review.datePosted | date:'MMM d, y' }}
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+
+                <!-- Card Footer -->
+                <div class="review-footer">
+                  <div class="review-actions">
+                    <a
+                      class="btn btn-sm btn-info"
+                      [routerLink]="['/review', review.reviewId]">
+                      View Details
+                    </a>
+                  </div>
+                </div>
+
+              </div>
+            }
+          </div>
+
+          <!-- Pagination Controls -->
+          @if (totalPages() > 1) {
+            <nav class="pagination"
+                 aria-label="Review pagination">
+
+              <button
+                type="button"
+                class="pagination-btn pagination-prev"
+                [disabled]="currentPage() === 1"
+                (click)="onPageChange(currentPage() - 1)">
+                Previous
+              </button>
+
+              <div class="pagination-pages">
+                @for (page of getPaginationPages(); track page) {
+                  <button
+                    type="button"
+                    class="pagination-btn pagination-page"
+                    [class.active]="currentPage() === page"
+                    [attr.aria-current]="currentPage() === page ? 'page' : null"
+                    (click)="onPageChange(page)">
+                    {{ page }}
+                  </button>
                 }
               </div>
-              
-              <div class="detail-row">
-                <span class="detail-label">Requested:</span>
-                <div class="date-content">
-                  <div class="date-value">{{ workOrder.dateRequested | date:'MMM d, y' }}</div>
-                </div>
-              </div>
-              
-              <div class="detail-row">
-                <span class="detail-label">Created:</span>
-                <div class="date-content">
-                  <div class="date-value">{{ review.dateAdded | date:'MMM d, y' }}</div>
-                  <div class="time-value">{{ review.dateAdded | date:'h:mm a' }}</div>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Card Footer -->
-          <div class="review-footer">
-            <div class="review-actions">
-              <a
-                class="btn btn-sm btn-info"
-                [routerLink]="['/reviews', review.orderNumber]">
-                View Details
-              </a>
-            </div>
-          </div>
-            </div>
+
+              <button
+                type="button"
+                class="pagination-btn pagination-next"
+                [disabled]="currentPage() === totalPages()"
+                (click)="onPageChange(currentPage() + 1)">
+                Next
+              </button>
+            </nav>
           }
-        </div>
 
-        <!-- Pagination Controls -->
-        @if (totalPages() > 1) {
-          <nav class="pagination" aria-label="Review pagination">
-            <button
-              type="button"
-              class="pagination-btn pagination-prev"
-              [disabled]="currentPage() === 1"
-              (click)="onPageChange(currentPage() - 1)">
-              Previous
-            </button>
+        } @else {
 
-            <div class="pagination-pages">
-              @for (page of getPaginationPages(); track page) {
+          <!-- Empty State -->
+          <div class="empty-state">
+            <div class="empty-state-content">
+              <div class="empty-state-icon">📚</div>
+
+              <h3 class="empty-state-title">
+                No reviews found
+              </h3>
+
+              <p class="empty-state-message">
+                Try adjusting your search criteria or filters
+                to see more results.
+              </p>
+
+              <div class="empty-state-actions">
+                <a
+                  class="btn btn-success"
+                  routerLink="/review/create">
+                  Create First Review
+                </a>
+
                 <button
+                  class="btn btn-outline-danger"
                   type="button"
-                  class="pagination-btn pagination-page"
-                  [class.active]="currentPage() === page"
-                  [attr.aria-current]="currentPage() === page ? 'page' : null"
-                  (click)="onPageChange(page)">
-                  {{ page }}
+                  (click)="clearFilters()">
+                  Clear Filters
                 </button>
-              }
+              </div>
             </div>
-
-            <button
-              type="button"
-              class="pagination-btn pagination-next"
-              [disabled]="currentPage() === totalPages()"
-              (click)="onPageChange(currentPage() + 1)">
-              Next
-            </button>
-          </nav>
-        }
-      }
-
-      <!-- Empty State -->
-      @if (filteredReviews().length === 0) {
-        <div class="empty-state">
-        <div class="empty-state-content">
-          <div class="empty-state-icon">📋</div>
-          <h3 class="empty-state-title">No reviews found</h3>
-          <p class="empty-state-message">
-            Try adjusting your search criteria or filters to see more results.
-          </p>
-          <div class="empty-state-actions">
-            <a 
-              class="btn btn-success"
-              routerLink="/work-orders/create">
-              Create First Review
-            </a>
-            <button 
-              class="btn btn-outline-danger"
-              type="button"
-              (click)="clearFilters()">
-              Clear Filters
-            </button>
           </div>
-        </div>
-        </div>
-      }
-    </div>
+
+        }
+      </div>
     </div>
   }
 </div>

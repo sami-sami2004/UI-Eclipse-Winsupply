@@ -1,0 +1,511 @@
+// =============================================================================
+// SCSS Mixins - Campus Maintenance Work Order System
+// =============================================================================
+
+// Import modern Sass color module
+@use 'sass:color';
+
+// Import variables using modern syntax
+@use './variables' as *;
+
+// Flexbox Utilities
+// -----------------------------------------------------------------------------
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin flex-start {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+@mixin flex-end {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+@mixin flex-column-center {
+  @include flex-column;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-row-center {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin form-control {
+  @include form-control-base;
+  @include form-control-size;
+}
+
+// Button Mixins
+// -----------------------------------------------------------------------------
+@mixin button-base {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: $border-radius-md;
+  font-family: $font-family-primary;
+  font-weight: $font-weight-medium;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all $transition-fast;
+  user-select: none;
+  
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+@mixin button-size($size: 'md') {
+  @if $size == 'sm' {
+    height: $button-height-sm;
+    padding: $button-padding-sm;
+    font-size: $font-size-sm;
+  } @else if $size == 'lg' {
+    height: $button-height-lg;
+    padding: $button-padding-lg;
+    font-size: $font-size-lg;
+  } @else {
+    height: $button-height-md;
+    padding: $button-padding-md;
+    font-size: $font-size-base;
+  }
+}
+
+@mixin button-variant($bg-color, $text-color: $white, $hover-darken: 10%) {
+  background-color: $bg-color;
+  color: $text-color;
+  
+  &:hover:not(:disabled) {
+    background-color: color.adjust($bg-color, $lightness: -$hover-darken);
+  }
+  
+  &:active:not(:disabled) {
+    background-color: color.adjust($bg-color, $lightness: -15%);
+    transform: translateY(1px);
+  }
+  
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba($bg-color, 0.3);
+  }
+}
+
+@mixin button-outline($border-color, $text-color: $border-color) {
+  background-color: $white;
+  color: $text-color;
+  border: 1px solid $border-color;
+  
+  &:hover:not(:disabled) {
+    background-color: rgba($border-color, 0.1);
+    border-color: color.adjust($border-color, $lightness: -10%);
+  }
+  
+  &:active:not(:disabled) {
+    background-color: rgba($border-color, 0.2);
+    transform: translateY(1px);
+  }
+  
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba($border-color, 0.3);
+  }
+}
+
+// Form Control Mixins
+// -----------------------------------------------------------------------------
+@mixin form-control-base {
+  display: block;
+  width: 100%;
+  font-family: $font-family-primary;
+  font-size: $font-size-base;
+  line-height: $line-height-normal;
+  color: $black;
+  background-color: $white;
+  border: 1px solid $border-medium;
+  border-radius: $border-radius-md;
+  transition: border-color $transition-fast, box-shadow $transition-fast;
+  
+  &:focus {
+    outline: none;
+    border-color: $primary-color;
+    box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
+  }
+  
+  &:disabled {
+    background-color: $light-gray;
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  
+  &.error {
+    border-color: $error-color;
+    
+    &:focus {
+      box-shadow: 0 0 0 2px rgba($error-color, 0.2);
+    }
+  }
+}
+
+@mixin form-control-size($size: 'md') {
+  @if $size == 'sm' {
+    height: $input-height-sm;
+    padding: $input-padding-sm;
+    font-size: $font-size-sm;
+  } @else if $size == 'lg' {
+    height: $input-height-lg;
+    padding: $input-padding-lg;
+    font-size: $font-size-lg;
+  } @else {
+    height: $input-height-md;
+    padding: $input-padding-md;
+    font-size: $font-size-base;
+  }
+}
+
+// Card Component Mixin
+// -----------------------------------------------------------------------------
+@mixin card($padding: $spacing-base, $shadow: $shadow-md) {
+  background-color: $white;
+  border-radius: $border-radius-lg;
+  box-shadow: $shadow;
+  padding: $padding;
+  border: 1px solid $border-light;
+}
+
+// Status Badge Mixins
+// -----------------------------------------------------------------------------
+@mixin status-badge($bg-color, $text-color: $white) {
+  display: inline-flex;
+  align-items: center;
+  padding: $spacing-xs $spacing-sm;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-radius: $border-radius-full;
+  background-color: $bg-color;
+  color: $text-color;
+}
+
+// Priority Badge Variants
+@mixin priority-low {
+  @include status-badge($priority-low);
+}
+
+@mixin priority-medium {
+  @include status-badge($priority-medium);
+}
+
+@mixin priority-high {
+  @include status-badge($priority-high);
+}
+
+@mixin priority-emergency {
+  @include status-badge($priority-emergency);
+}
+
+// Status Badge Variants
+@mixin status-open {
+  @include status-badge($status-open);
+}
+
+@mixin status-in-progress {
+  @include status-badge($status-in-progress);
+}
+
+@mixin status-completed {
+  @include status-badge($status-completed);
+}
+
+@mixin status-cancelled {
+  @include status-badge($status-cancelled);
+}
+
+// Modern Responsive Mixins
+// -----------------------------------------------------------------------------
+
+// Progressive Enhancement Mixins (Mobile-First)
+@mixin respond-to($breakpoint) {
+  @if $breakpoint == 'xs' {
+    @media (min-width: $breakpoint-xs) {
+      @content;
+    }
+  } @else if $breakpoint == 'sm' or $breakpoint == 'mobile' {
+    @media (min-width: $breakpoint-sm) {
+      @content;
+    }
+  } @else if $breakpoint == 'md' or $breakpoint == 'tablet' {
+    @media (min-width: $breakpoint-md) {
+      @content;
+    }
+  } @else if $breakpoint == 'lg' or $breakpoint == 'desktop' {
+    @media (min-width: $breakpoint-lg) {
+      @content;
+    }
+  } @else if $breakpoint == 'xl' or $breakpoint == 'wide' {
+    @media (min-width: $breakpoint-xl) {
+      @content;
+    }
+  } @else if $breakpoint == 'xxl' {
+    @media (min-width: $breakpoint-xxl) {
+      @content;
+    }
+  }
+}
+
+// Range-Based Responsive Mixins
+@mixin mobile-only {
+  @media (max-width: #{$breakpoint-md - 1px}) {
+    @content;
+  }
+}
+
+@mixin tablet-only {
+  @media (min-width: $breakpoint-md) and (max-width: #{$breakpoint-lg - 1px}) {
+    @content;
+  }
+}
+
+@mixin desktop-only {
+  @media (min-width: $breakpoint-lg) {
+    @content;
+  }
+}
+
+@mixin mobile-and-tablet {
+  @media (max-width: #{$breakpoint-lg - 1px}) {
+    @content;
+  }
+}
+
+@mixin tablet-and-desktop {
+  @media (min-width: $breakpoint-md) {
+    @content;
+  }
+}
+
+// Modern CSS Features
+// -----------------------------------------------------------------------------
+
+// Container Query Mixin (when supported)
+@mixin container-query($size) {
+  @container (min-width: $size) {
+    @content;
+  }
+}
+
+// Modern Grid Layouts
+@mixin responsive-grid($columns: 1, $gap: $spacing-md) {
+  display: grid;
+  gap: $gap;
+  grid-template-columns: repeat($columns, 1fr);
+  
+  @include mobile-only {
+    grid-template-columns: 1fr;
+    gap: $spacing-sm;
+  }
+}
+
+// Auto-fit Grid (Modern responsive grid)
+@mixin auto-fit-grid($min-width: 280px, $gap: $spacing-md) {
+  display: grid;
+  gap: $gap;
+  grid-template-columns: repeat(auto-fit, minmax($min-width, 1fr));
+}
+
+// Auto-fill Grid (Modern responsive grid)
+@mixin auto-fill-grid($min-width: 280px, $gap: $spacing-md) {
+  display: grid;
+  gap: $gap;
+  grid-template-columns: repeat(auto-fill, minmax($min-width, 1fr));
+}
+
+// Modern Flexbox Responsive
+@mixin responsive-flex($direction: row, $wrap: wrap, $gap: $spacing-md) {
+  display: flex;
+  flex-direction: $direction;
+  flex-wrap: $wrap;
+  gap: $gap;
+  
+  @include mobile-only {
+    flex-direction: column;
+    gap: $spacing-sm;
+  }
+}
+
+// Responsive Container with logical properties
+@mixin responsive-container($max-width: $container-xl) {
+  container-type: inline-size;
+  inline-size: 100%;
+  max-inline-size: $max-width;
+  margin-inline: auto;
+  padding-inline: $spacing-md;
+  
+  @include mobile-only {
+    padding-inline: $spacing-sm;
+  }
+  
+  @include respond-to('xl') {
+    padding-inline: $spacing-lg;
+  }
+}
+
+// Modern Aspect Ratio
+@mixin aspect-ratio($ratio: 16/9) {
+  aspect-ratio: $ratio;
+}
+
+// Responsive Typography with Modern Units
+@mixin responsive-text($min-size: 1rem, $max-size: 2rem, $viewport-unit: 4vw) {
+  font-size: clamp($min-size, $viewport-unit, $max-size);
+}
+
+// Touch-Friendly Interactive Elements
+@mixin touch-target {
+  @media (hover: hover) and (pointer: fine) {
+    // Desktop styles - reset to auto
+    min-block-size: auto;
+    min-inline-size: auto;
+  }
+  
+  & {
+    min-block-size: 44px;
+    min-inline-size: 44px;
+  }
+}
+
+// Modern Viewport Units
+@mixin full-viewport-height {
+  block-size: $viewport-height-mobile;
+  
+  @include desktop-only {
+    block-size: $viewport-height-desktop;
+  }
+}
+
+// High DPI / Retina Display
+@mixin retina {
+  @media 
+    (-webkit-min-device-pixel-ratio: 2),
+    (min-resolution: 192dpi),
+    (min-resolution: 2dppx) {
+    @content;
+  }
+}
+
+// Modern Media Queries for Interaction
+@mixin hover-support {
+  @media (hover: hover) and (pointer: fine) {
+    @content;
+  }
+}
+
+@mixin touch-device {
+  @media (hover: none) and (pointer: coarse) {
+    @content;
+  }
+}
+
+// Reduced Motion Support
+@mixin respect-motion-preferences {
+  @media (prefers-reduced-motion: reduce) {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+// Animation Mixins
+// -----------------------------------------------------------------------------
+@mixin slide-in-from-top {
+  @keyframes slideInFromTop {
+    from {
+      transform: translateY(-20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  animation: slideInFromTop $transition-normal ease-out;
+}
+
+@mixin fade-in {
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  animation: fadeIn $transition-normal ease-out;
+}
+
+// Utility Mixins
+// -----------------------------------------------------------------------------
+@mixin visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@mixin truncate-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@mixin clearfix {
+  &::after {
+    content: '';
+    display: table;
+    clear: both;
+  }
+}
+
+// Focus Ring Mixin (for accessibility)
+@mixin focus-ring($color: $primary-color) {
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba($color, 0.5);
+  }
+  
+  &:focus:not(:focus-visible) {
+    box-shadow: none;
+  }
+  
+  &:focus-visible {
+    box-shadow: 0 0 0 2px rgba($color, 0.5);
+  }
+} 

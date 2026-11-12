@@ -1,16 +1,18 @@
-@use 'sass:color';
-@use '../../../../../styles/variables' as *;
-@use '../../../../../styles/mixins' as *;
 
-.work-order-list {
+@use 'sass:color';
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+// Review List Container
+.review-list {
   @include responsive-container($container-xl);
-  
+
   & {
     padding-block: $spacing-sm;
     padding-inline: $spacing-md;
     margin-inline: auto;
   }
-  
+
   @include mobile-only {
     padding-block: $spacing-sm;
     padding-inline: $spacing-sm;
@@ -23,32 +25,32 @@
   margin: $spacing-sm;
   margin-block-end: $spacing-xl;
   background-color: #fdfdfd;
-  
+
   .header-content {
     @include responsive-flex(row, wrap, $spacing-md);
-    
+
     & {
       justify-content: space-between;
       align-items: center;
     }
-    
+
     @include mobile-only {
       flex-direction: column;
       text-align: center;
     }
   }
-  
+
   .page-title {
     @include responsive-text(1.75rem, 2.5rem, 3vw);
     font-weight: $font-weight-bold;
     color: $dark-gray;
     margin: 0;
   }
-  
+
   .header-actions {
     @include flex-row-center;
     gap: $spacing-md;
-    
+
     @include mobile-only {
       width: 100%;
       justify-content: center;
@@ -63,20 +65,20 @@
   margin: $spacing-sm;
   margin-block-end: $spacing-xl;
   background-color: #fdfdfd;
-  
+
   .card-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: $spacing-lg;
-    
+
     .card-title {
       font-size: $font-size-xl;
       font-weight: $font-weight-bold;
       color: $dark-gray;
       margin: 0;
     }
-    
+
     .collapse-button {
       background: none;
       border: none;
@@ -86,27 +88,27 @@
       font-size: $font-size-lg;
       border-radius: $border-radius-sm;
       transition: all 0.2s ease;
-      
+
       &:hover {
         background: rgba($primary-color, 0.1);
         color: $primary-color;
       }
-      
+
       .collapse-icon {
         display: inline-block;
         transition: transform 0.3s ease;
-        
+
         &.collapsed {
           transform: rotate(-90deg);
         }
       }
     }
   }
-  
+
   .card-body {
     transition: all 0.3s ease;
     overflow: hidden;
-    
+
     &.collapsed {
       max-height: 0;
       opacity: 0;
@@ -119,7 +121,7 @@
 // Search Section
 .search-section {
   margin-bottom: $spacing-lg;
-  
+
   .search-group {
     .search-label {
       display: block;
@@ -128,22 +130,22 @@
       color: $dark-gray;
       margin-bottom: $spacing-sm;
     }
-    
+
     .search-input-wrapper {
       position: relative;
-      
+
       .search-input {
         width: 100%;
         padding-right: 48px;
         font-size: $font-size-base;
         min-height: 44px;
-        
+
         &::placeholder {
           color: $secondary-color;
           font-size: $font-size-base;
         }
       }
-      
+
       .search-icon {
         position: absolute;
         right: $spacing-lg;
@@ -153,6 +155,12 @@
         pointer-events: none;
         font-size: $font-size-lg;
       }
+    }
+
+    .search-help {
+      font-size: $font-size-sm;
+      color: $secondary-color;
+      margin-top: $spacing-xs;
     }
   }
 }
@@ -164,13 +172,13 @@
     gap: $spacing-lg;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     margin-bottom: $spacing-xl;
-    
+
     @include mobile-only {
       grid-template-columns: 1fr;
       gap: $spacing-md;
     }
   }
-  
+
   .filter-group {
     .filter-label {
       display: block;
@@ -180,11 +188,11 @@
       margin-bottom: $spacing-sm;
     }
   }
-  
+
   .filter-actions {
     display: flex;
     justify-content: flex-end;
-    
+
     @include mobile-only {
       justify-content: center;
     }
@@ -200,29 +208,29 @@
   @include card($spacing-lg, $shadow-sm);
   margin: $spacing-sm;
   background-color: #fdfdfd;
-  
+
   .card-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     margin-bottom: $spacing-lg;
     gap: $spacing-md;
-    
+
     @include mobile-only {
       flex-direction: column;
       align-items: stretch;
     }
-    
+
     .card-title-section {
       flex: 1;
-      
+
       .card-title {
         font-size: $font-size-xl;
         font-weight: $font-weight-bold;
         color: $dark-gray;
         margin: 0 0 $spacing-xs 0;
       }
-      
+
       .results-count {
         .count-text {
           font-size: $font-size-sm;
@@ -230,19 +238,19 @@
         }
       }
     }
-    
+
     .card-actions {
       .page-size-selector {
         display: flex;
         align-items: center;
         gap: $spacing-sm;
-        
+
         .page-size-label {
           font-size: $font-size-sm;
           color: $secondary-color;
           white-space: nowrap;
         }
-        
+
         .page-size-select {
           min-width: 80px;
           min-height: 50px;
@@ -252,89 +260,51 @@
   }
 }
 
-// Work Orders Grid
-.work-orders-grid {
+// Reviews Grid
+.reviews-grid {
   display: grid;
   gap: $spacing-lg;
   grid-template-columns: 1fr;
-  
+
   @include respond-to('md') {
     grid-template-columns: repeat(2, 1fr);
   }
-  
+
   @include respond-to('xl') {
     grid-template-columns: repeat(3, 1fr);
   }
 }
 
-// Work Order Card
-.work-order-card {
+// Review Card
+.review-card {
   @include card($spacing-lg, $shadow-sm);
   margin: $spacing-sm;
   background-color: #fdfdfd;
   transition: all 0.2s ease;
-  border-left: 4px solid transparent;
+  border-left: 4px solid $primary-color;
   display: flex;
   flex-direction: column;
-  min-height: 280px; // Ensure consistent card height
-  
+  min-height: 280px;
+
   &:hover {
     transform: translateY(-2px);
     box-shadow: $shadow-md;
   }
-  
-  &.priority-emergency {
-    background-color: rgba($priority-emergency, 0.08);
-    border-left-color: $priority-emergency;
-    
-    &:hover {
-      background-color: rgba($priority-emergency, 0.12);
-      box-shadow: 0 8px 25px rgba($error-color, 0.2);
-    }
-  }
-  
-  &.priority-high {
-    background-color: rgba($priority-high, 0.08);
-    border-left-color: $priority-high;
-    
-    &:hover {
-      background-color: rgba($priority-high, 0.12);
-      box-shadow: 0 8px 25px rgba($warning-color, 0.2);
-    }
-  }
-  
-  &.priority-medium {
-    background-color: rgba($priority-medium, 0.06);
-    border-left-color: $priority-medium;
-    
-    &:hover {
-      background-color: rgba($priority-medium, 0.10);
-    }
-  }
-  
-  &.priority-low {
-    background-color: rgba($priority-low, 0.06);
-    border-left-color: $priority-low;
-    
-    &:hover {
-      background-color: rgba($priority-low, 0.10);
-    }
-  }
 }
 
-// Work Order Header
-.work-order-header {
+// Review Header
+.review-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: $spacing-md;
   gap: $spacing-md;
-  
-  .work-order-title-section {
+
+  .review-title-section {
     flex: 1;
     min-width: 0;
-    
-    .work-order-title {
+
+    .review-title {
       font-size: $font-size-lg;
       font-weight: $font-weight-semibold;
       color: $primary-color;
@@ -342,25 +312,25 @@
       line-height: 1.3;
       display: block;
       margin-bottom: $spacing-xs;
-      
+
       &:hover {
         text-decoration: underline;
       }
     }
-    
-    .work-order-id {
+
+    .review-id {
       font-size: $font-size-sm;
       color: $secondary-color;
       font-weight: $font-weight-medium;
     }
   }
-  
-  .work-order-status {
+
+  .review-status {
     flex-shrink: 0;
   }
 }
 
-// Status Chips (similar to dashboard)
+// Recommendation Status Chips
 .status-chip {
   display: inline-flex;
   align-items: center;
@@ -373,135 +343,86 @@
   transition: all 0.2s ease;
   position: relative;
   overflow: hidden;
-  
+
   &__indicator {
     width: 8px;
     height: 8px;
     border-radius: 50%;
     flex-shrink: 0;
   }
-  
+
   &__label {
     white-space: nowrap;
   }
-  
-  &--open {
-    background: rgba($status-open, 0.1);
-    border-color: rgba($status-open, 0.2);
-    color: $status-open;
-    
-    .status-chip__indicator {
-      background: $status-open;
-    }
-  }
-  
-  &--in-progress {
-    background: rgba($status-in-progress, 0.1);
-    border-color: rgba($status-in-progress, 0.2);
-    color: $status-in-progress;
-    
-    .status-chip__indicator {
-      background: $status-in-progress;
-    }
-  }
-  
+
+  // Recommended
   &--completed {
     background: rgba($status-completed, 0.1);
     border-color: rgba($status-completed, 0.2);
     color: $status-completed;
-    
+
     .status-chip__indicator {
       background: $status-completed;
     }
   }
-  
+
+  // Not Recommended
   &--cancelled {
     background: rgba($status-cancelled, 0.1);
     border-color: rgba($status-cancelled, 0.2);
     color: $status-cancelled;
-    
+
     .status-chip__indicator {
       background: $status-cancelled;
     }
   }
 }
 
-// Work Order Content
-.work-order-content {
+// Review Content
+.review-content {
   margin-bottom: $spacing-lg;
-  
-  .work-order-details {
+
+  .review-details {
     display: flex;
     flex-direction: column;
     gap: $spacing-md;
   }
-  
+
   .detail-row {
     display: flex;
     align-items: flex-start;
     gap: $spacing-sm;
-    
+
     @include mobile-only {
       flex-direction: column;
       gap: $spacing-xs;
     }
-    
+
     .detail-label {
       font-size: $font-size-sm;
       font-weight: $font-weight-medium;
       color: $secondary-color;
       min-width: 90px;
       flex-shrink: 0;
-      
+
       @include mobile-only {
         min-width: auto;
       }
     }
-    
+
     .detail-value {
       font-size: $font-size-sm;
       color: $dark-gray;
+      overflow-wrap: anywhere;
     }
-    
-    .location-content {
-      .building-name {
-        font-size: $font-size-sm;
-        font-weight: $font-weight-medium;
-        color: $dark-gray;
-      }
-      
-      .room-number {
-        font-size: $font-size-xs;
-        color: $secondary-color;
-      }
-    }
-    
-    .assigned-content {
-      .assignee-name {
-        font-size: $font-size-sm;
-        font-weight: $font-weight-medium;
-        color: $dark-gray;
-      }
-      
-      .assignee-role {
-        font-size: $font-size-xs;
-        color: $secondary-color;
-      }
-    }
-    
-    .unassigned-text {
-      font-size: $font-size-sm;
-      color: $secondary-color;
-      font-style: italic;
-    }
-    
+
     .date-content {
       .date-value {
         font-size: $font-size-sm;
         font-weight: $font-weight-medium;
         color: $dark-gray;
       }
-      
+
       .time-value {
         font-size: $font-size-xs;
         color: $secondary-color;
@@ -510,27 +431,26 @@
   }
 }
 
-// Work Order Footer
-.work-order-footer {
-  margin-top: auto; // Push footer to bottom of card
+// Review Footer
+.review-footer {
+  margin-top: auto;
   padding-top: $spacing-lg;
   border-top: 1px solid rgba($border-light, 0.5);
-  
-  .work-order-actions {
+
+  .review-actions {
     display: flex;
     gap: $spacing-md;
-    justify-content: center; // Center buttons for consistency
-    
+    justify-content: center;
+
     @include mobile-only {
       justify-content: stretch;
       gap: $spacing-sm;
-      
+
       .btn {
         flex: 1;
       }
     }
-    
-    // For larger screens, maintain centered layout
+
     @include respond-to('md') {
       justify-content: center;
       gap: $spacing-lg;
@@ -551,35 +471,35 @@
 .empty-state {
   @include flex-center;
   min-height: 300px;
-  
+
   .empty-state-content {
     @include flex-column-center;
     text-align: center;
     gap: $spacing-md;
-    
+
     .empty-state-icon {
       font-size: 4rem;
       opacity: 0.5;
     }
-    
+
     .empty-state-title {
       font-size: $font-size-xl;
       font-weight: $font-weight-bold;
       color: $dark-gray;
       margin: 0;
     }
-    
+
     .empty-state-message {
       color: $secondary-color;
       margin: 0;
       max-width: 400px;
       line-height: 1.5;
     }
-    
+
     .empty-state-actions {
       display: flex;
       gap: $spacing-sm;
-      
+
       @include mobile-only {
         flex-direction: column;
         width: 100%;
@@ -659,20 +579,19 @@
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
   min-height: 44px;
   line-height: 1.4;
-  
+
   &:focus {
     outline: none;
     border-color: $primary-color;
     box-shadow: 0 0 0 3px rgba($primary-color, 0.1);
   }
-  
+
   &:disabled {
     background: $background-disabled;
     color: $secondary-color;
     cursor: not-allowed;
   }
-  
-  // Dropdown/Select specific styling
+
   &.filter-select,
   &.page-size-select {
     appearance: none;
@@ -682,72 +601,56 @@
     background-size: 16px;
     padding-right: $spacing-2xl;
     cursor: pointer;
-    
+
     &:hover {
       border-color: $primary-color;
     }
-    
-    &:focus {
-      background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23981e32' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3E%3C/svg%3E");
-    }
   }
-  
-  // Options styling (when dropdown is open)
+
   option {
     padding: $spacing-sm $spacing-md;
     font-size: $font-size-base;
-    line-height: 1.4;
     background: $white;
     color: $dark-gray;
-    
-    &:hover,
-    &:focus {
-      background: rgba($primary-color, 0.1);
-    }
-    
-    &:checked {
-      background: rgba($primary-color, 0.2);
-      color: $primary-color;
-    }
   }
 }
 
-// Button Styles with Color Variants
+// Buttons
 .btn {
   @include button-base;
-  
+
   &.btn-primary {
     @include button-variant($primary-color);
   }
-  
+
   &.btn-secondary {
     @include button-variant($secondary-color);
   }
-  
+
   &.btn-success {
     @include button-variant($success-color);
   }
-  
+
   &.btn-info {
     @include button-variant($info-color);
   }
-  
-  &.btn-outline {
-    @include button-outline($secondary-color);
+
+  &.btn-outline-primary {
+    @include button-outline($primary-color);
   }
 
   &.btn-outline-danger {
     @include button-outline($error-color);
   }
-  
+
   &.btn-outline-info {
     @include button-outline($info-color);
   }
-  
+
   &.btn-sm {
     @include button-size('sm');
   }
-  
+
   .btn-icon {
     font-weight: bold;
     margin-right: $spacing-xs;
@@ -756,43 +659,24 @@
 
 // Responsive Design
 @media (max-width: $breakpoint-tablet) {
-  .work-order-list {
+  .review-list {
     padding: var(--spacing-md);
   }
-  
-  .list-header {
+
+  .header-card {
     .header-content {
       flex-direction: column;
       align-items: stretch;
-      
+
       .header-actions {
-        order: -1;
-        justify-content: flex-end;
+        justify-content: center;
+        flex-wrap: wrap;
       }
     }
   }
-  
-  .work-orders-table-container {
-    .work-orders-table {
-      font-size: var(--font-size-sm);
-      
-      th,
-      td {
-        padding: var(--spacing-sm);
-      }
-      
-      // Hide less important columns on mobile
-      .category-cell,
-      .assigned-cell,
-      .date-cell {
-        display: none;
-      }
-    }
-  }
-  
+
   .pagination {
     .pagination-pages {
-      // Show fewer page numbers on mobile
       .pagination-page:nth-child(n+4) {
         display: none;
       }
@@ -801,15 +685,6 @@
 }
 
 @media (max-width: $breakpoint-mobile) {
-  .work-orders-table-container {
-    .work-orders-table {
-      // Convert to card layout on very small screens
-      .location-cell {
-        display: none;
-      }
-    }
-  }
-  
   .pagination {
     .pagination-btn {
       padding: var(--spacing-sm);
@@ -818,7 +693,7 @@
   }
 }
 
-// Screen reader only class
+// Screen Reader Only
 .sr-only {
   position: absolute;
   width: 1px;
@@ -829,4 +704,4 @@
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
-} 
+}

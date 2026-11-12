@@ -1,14 +1,16 @@
-@use 'sass:color';
-@use '../../../styles/variables' as *;
-@use '../../../styles/mixins' as *;
 
+@use 'sass:color';
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+// Dashboard Container
 .dashboard {
   @include responsive-container($container-xl);
-  
+
   @include mobile-only {
     padding-block: $spacing-md;
   }
-  
+
   & {
     padding-block: $spacing-lg;
   }
@@ -18,32 +20,32 @@
 .header-card {
   @include card($spacing-lg, $shadow-sm);
   margin-block-end: $spacing-xl;
-  
+
   .header-content {
     @include responsive-flex(row, wrap, $spacing-lg);
-    
+
     & {
       justify-content: space-between;
       align-items: center;
     }
-    
+
     @include mobile-only {
       flex-direction: column;
       text-align: center;
     }
   }
-  
+
   .header-text {
     flex: 1;
     min-width: 0;
-    
+
     .page-title {
       @include responsive-text(1.75rem, 2.5rem, 3vw);
       font-weight: $font-weight-bold;
       color: $dark-gray;
       margin-block: 0 $spacing-sm;
     }
-    
+
     .page-subtitle {
       font-size: $font-size-lg;
       color: $secondary-color;
@@ -51,11 +53,11 @@
       font-weight: $font-weight-normal;
     }
   }
-  
+
   .header-actions {
     @include flex-row-center;
     gap: $spacing-md;
-    
+
     @include mobile-only {
       width: 100%;
       justify-content: center;
@@ -65,9 +67,10 @@
 }
 
 // Loading State
-.dashboard-loading {
+.dashboard-loading,
+.loading-container {
   @include flex-center;
-  min-height: 400px;
+  min-height: 300px;
 }
 
 .dashboard-content {
@@ -76,7 +79,7 @@
   gap: $spacing-xl;
 }
 
-// Stats Section
+// Statistics Section
 .stats-section {
   .section-title {
     font-size: $font-size-xl;
@@ -84,7 +87,7 @@
     color: $dark-gray;
     margin-bottom: $spacing-lg;
     margin-top: 0;
-    
+
     @include mobile-only {
       text-align: center;
       font-size: $font-size-2xl;
@@ -92,7 +95,7 @@
   }
 }
 
-// Status Section
+// Rating Breakdown Section
 .status-section {
   .section-title {
     font-size: $font-size-xl;
@@ -100,7 +103,7 @@
     color: $dark-gray;
     margin-bottom: $spacing-lg;
     margin-top: 0;
-    
+
     @include mobile-only {
       text-align: center;
       font-size: $font-size-2xl;
@@ -108,46 +111,43 @@
   }
 }
 
-// Statistics Grid - Modern responsive grid
+// Statistics Grid
 .stats-grid {
   display: grid;
   gap: $spacing-xl;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  
+
   @include mobile-only {
     grid-template-columns: 1fr;
     gap: $spacing-lg;
   }
-  
+
   @include respond-to('sm') {
     grid-template-columns: repeat(2, 1fr);
   }
-  
+
   @include respond-to('md') {
     grid-template-columns: repeat(3, 1fr);
   }
-  
+
   @include respond-to('lg') {
     grid-template-columns: repeat(4, 1fr);
   }
-  
-  @include respond-to('xl') {
-    grid-template-columns: repeat(5, 1fr);
-  }
 }
 
+// Statistics Cards
 .stat-card {
   @include card($spacing-lg, $shadow-md);
   @include flex-column-center;
   @include touch-target;
-  
+
   @include hover-support {
     &:hover {
       transform: translateY(-4px);
       box-shadow: $shadow-lg;
     }
   }
-  
+
   & {
     min-height: 160px;
     aspect-ratio: 1;
@@ -155,14 +155,14 @@
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     padding: $spacing-xl;
   }
-  
+
   @include mobile-only {
     aspect-ratio: auto;
     min-height: 100px;
     flex-direction: row;
     text-align: left;
     padding: $spacing-md $spacing-lg;
-    
+
     .stat-card__content {
       flex: 1;
       display: flex;
@@ -172,7 +172,7 @@
       gap: $spacing-md;
     }
   }
-  
+
   &__icon {
     width: 64px;
     height: 64px;
@@ -181,7 +181,7 @@
     font-size: $font-size-2xl;
     flex-shrink: 0;
     margin-bottom: $spacing-md;
-    
+
     @include mobile-only {
       width: 56px;
       height: 56px;
@@ -189,40 +189,40 @@
       margin-bottom: 0;
       margin-right: $spacing-md;
     }
-    
+
     &--primary {
       background-color: rgba($primary-color, 0.1);
       color: $primary-color;
     }
-    
+
     &--warning {
       background-color: rgba($warning-color, 0.1);
       color: $warning-color;
     }
-    
+
     &--success {
       background-color: rgba($success-color, 0.1);
       color: $success-color;
     }
-    
+
     &--danger {
       background-color: rgba($error-color, 0.1);
       color: $error-color;
     }
   }
-  
+
   &__content {
     flex: 1;
     min-width: 0;
   }
-  
+
   &__value {
     font-size: $font-size-3xl;
     font-weight: $font-weight-bold;
     color: $dark-gray;
     margin: 0 0 $spacing-sm 0;
     line-height: 1.1;
-    
+
     @include mobile-only {
       font-size: $font-size-2xl;
       margin: 0;
@@ -230,20 +230,29 @@
       flex-shrink: 0;
     }
   }
-  
+
   &__label {
     font-size: $font-size-base;
     color: $secondary-color;
     margin: 0;
     font-weight: $font-weight-medium;
     line-height: 1.4;
-    
+
     @include mobile-only {
       font-size: $font-size-base;
       order: 1;
       flex: 1;
       min-width: 0;
     }
+  }
+
+  &--danger {
+    background: linear-gradient(
+      135deg,
+      rgba($error-color, 0.1) 0%,
+      rgba($error-color, 0.05) 100%
+    );
+    border-color: rgba($error-color, 0.2);
   }
 }
 
@@ -257,22 +266,22 @@
 // Content Cards
 .content-card {
   @include card($spacing-lg, $shadow-md);
-  
+
   @include hover-support {
     &:hover {
       box-shadow: $shadow-lg;
     }
   }
-  
+
   & {
     transition: box-shadow 0.2s ease;
   }
-  
+
   .card-header {
     margin-bottom: $spacing-lg;
     padding-bottom: $spacing-md;
     border-bottom: 1px solid $border-light;
-    
+
     .card-title {
       font-size: $font-size-lg;
       font-weight: $font-weight-bold;
@@ -280,52 +289,40 @@
       margin: 0;
     }
   }
-  
-  .card-body {
-    // Content styling handled by children
-  }
 }
 
-// Alert Card Variant
-.alert-card {
-  border-left: 4px solid $error-color;
-  
-  .card-header .card-title {
-    color: $error-color;
-  }
-}
-
-// Status Chips Grid
+// Rating Breakdown Grid
 .status-chips-grid {
   display: grid;
   gap: $spacing-md;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  
+
   @include mobile-only {
     grid-template-columns: 1fr;
     gap: $spacing-sm;
   }
-  
+
   @include respond-to('sm') {
     grid-template-columns: repeat(2, 1fr);
   }
-  
+
   @include respond-to('lg') {
     grid-template-columns: repeat(4, 1fr);
   }
 }
 
+// Rating Chips
 .status-chip {
   @include flex-row-center;
   @include touch-target;
-  
+
   @include hover-support {
     &:hover {
       transform: translateY(-1px);
       box-shadow: $shadow-md;
     }
   }
-  
+
   & {
     gap: $spacing-md;
     padding: $spacing-lg $spacing-xl;
@@ -336,105 +333,74 @@
     position: relative;
     overflow: hidden;
   }
-  
+
   @include mobile-only {
     padding: $spacing-md $spacing-lg;
     min-height: 70px;
   }
-  
 
-  
   &__content {
     @include flex-row-center;
     justify-content: space-between;
     width: 100%;
     margin-left: $spacing-lg;
   }
-  
+
   &__label {
     font-size: $font-size-base;
     font-weight: $font-weight-medium;
     color: $dark-gray;
-    
-    @include mobile-only {
-      font-size: $font-size-base;
-    }
   }
-  
+
   &__value {
     font-size: $font-size-xl;
     font-weight: $font-weight-bold;
     color: $dark-gray;
     line-height: 1;
-    
-    @include mobile-only {
-      font-size: $font-size-xl;
-    }
   }
-  
-  // Status variants
+
   &--open {
     background: rgba($status-open, 0.1);
     border-color: rgba($status-open, 0.2);
-    
-    .status-chip__indicator {
-      background: $status-open;
-    }
-    
+
     &:hover {
       background: rgba($status-open, 0.15);
-      border-color: rgba($status-open, 0.3);
     }
   }
-  
+
   &--progress {
     background: rgba($status-in-progress, 0.1);
     border-color: rgba($status-in-progress, 0.2);
-    
-    .status-chip__indicator {
-      background: $status-in-progress;
-    }
-    
+
     &:hover {
       background: rgba($status-in-progress, 0.15);
-      border-color: rgba($status-in-progress, 0.3);
     }
   }
-  
+
   &--completed {
     background: rgba($status-completed, 0.1);
     border-color: rgba($status-completed, 0.2);
-    
-    .status-chip__indicator {
-      background: $status-completed;
-    }
-    
+
     &:hover {
       background: rgba($status-completed, 0.15);
-      border-color: rgba($status-completed, 0.3);
     }
   }
-  
+
   &--cancelled {
     background: rgba($status-cancelled, 0.1);
     border-color: rgba($status-cancelled, 0.2);
-    
-    .status-chip__indicator {
-      background: $status-cancelled;
-    }
-    
+
     &:hover {
       background: rgba($status-cancelled, 0.15);
-      border-color: rgba($status-cancelled, 0.3);
     }
   }
 }
 
-// Action Buttons (now in header)
+// Header Action Buttons
 .header-actions .action-button {
   min-height: 80px;
   min-width: 140px;
-  
+
   @include mobile-only {
     min-height: 70px;
     min-width: 120px;
@@ -449,7 +415,7 @@
   gap: $spacing-sm;
   min-height: 120px;
   border: 2px solid transparent;
-  
+
   @include hover-support {
     &:hover {
       transform: translateY(-2px);
@@ -457,17 +423,11 @@
       text-decoration: none;
     }
   }
-  
-  @include touch-device {
-    &:active {
-      transform: translateY(1px);
-    }
-  }
-  
+
   & {
     transition: all 0.2s ease;
   }
-  
+
   &__icon {
     width: 48px;
     height: 48px;
@@ -476,106 +436,72 @@
     font-size: $font-size-xl;
     font-weight: bold;
   }
-  
+
   &__content {
     text-align: center;
   }
-  
+
   &__title {
     font-size: $font-size-md;
     font-weight: $font-weight-semibold;
     color: $dark-gray;
     margin-bottom: $spacing-xs;
   }
-  
+
   &__subtitle {
     font-size: $font-size-sm;
     color: $secondary-color;
     font-weight: $font-weight-medium;
   }
-  
-  // Variants
+
   &--primary {
     border-color: rgba($primary-color, 0.2);
-    
+
     .action-button__icon {
       background: rgba($primary-color, 0.1);
       color: $primary-color;
     }
-    
+
     &:hover {
       border-color: $primary-color;
     }
   }
-  
+
   &--secondary {
     border-color: rgba($secondary-color, 0.2);
-    
+
     .action-button__icon {
       background: rgba($secondary-color, 0.1);
       color: $secondary-color;
     }
-    
+
     &:hover {
       border-color: $secondary-color;
     }
-  }
-  
-  &--tertiary {
-    border-color: rgba($success-color, 0.2);
-    
-    .action-button__icon {
-      background: rgba($success-color, 0.1);
-      color: $success-color;
-    }
-    
-    &:hover {
-      border-color: $success-color;
-    }
-  }
-}
-
-// Alert Content
-.alert-content {
-  .alert-message {
-    font-size: $font-size-base;
-    color: $error-color;
-    margin-bottom: $spacing-sm;
-  }
-  
-  .alert-description {
-    color: $secondary-color;
-    margin-bottom: $spacing-md;
-    line-height: 1.5;
-  }
-  
-  .alert-actions {
-    @include flex-start;
-    gap: $spacing-sm;
   }
 }
 
 // Empty State Card
 .empty-state-card {
   @include card($spacing-xl, $shadow-md);
-  
+
   .empty-state-content {
     @include flex-column-center;
     text-align: center;
     gap: $spacing-md;
-    
+
     .empty-state-icon {
       font-size: 4rem;
       opacity: 0.5;
     }
-    
+
     .empty-state-title {
       font-size: $font-size-xl;
       font-weight: $font-weight-bold;
       color: $dark-gray;
       margin: 0;
     }
-    
+
     .empty-state-message {
       color: $secondary-color;
       margin: 0;
@@ -585,155 +511,23 @@
   }
 }
 
-// Button Styles (using our button mixins)
+// Buttons
 .btn {
   @include button-base;
-  
+
   &.btn-primary {
     @include button-variant($primary-color);
   }
-  
+
   &.btn-secondary {
     @include button-variant($secondary-color);
   }
-  
+
   &.btn-danger {
     @include button-variant($error-color);
   }
-  
+
   &.btn-sm {
     @include button-size('sm');
   }
 }
-
-.icon {
-  display: inline-block;
-}
-
-// =============================================================================
-// Additional Statistics Styling
-// =============================================================================
-
-// Category Breakdown Section
-.category-section {
-  @include card($spacing-lg, $shadow-sm);
-  margin-block-end: $spacing-lg;
-  
-  .category-list {
-    display: flex;
-    flex-direction: column;
-    gap: $spacing-md;
-  }
-  
-  .category-item {
-    display: flex;
-    flex-direction: column;
-    gap: $spacing-xs;
-  }
-  
-  .category-info {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    
-    .category-name {
-      font-weight: $font-weight-medium;
-      color: $dark-gray;
-    }
-    
-    .category-count {
-      font-size: $font-size-sm;
-      color: $secondary-color;
-    }
-  }
-  
-  .category-bar {
-    height: 8px;
-    background: $border-light;
-    border-radius: $border-radius-sm;
-    overflow: hidden;
-    
-    .category-bar__fill {
-      height: 100%;
-      background: linear-gradient(90deg, $primary-color, $success-color);
-      border-radius: $border-radius-sm;
-      transition: width $transition-normal;
-    }
-  }
-}
-
-// Technician Efficiency Section
-.technician-section {
-  @include card($spacing-lg, $shadow-sm);
-  margin-block-end: $spacing-lg;
-  
-  .technician-list {
-    display: flex;
-    flex-direction: column;
-    gap: $spacing-md;
-  }
-  
-  .technician-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: $spacing-md;
-    background: rgba($primary-color, 0.05);
-    border-radius: $border-radius-md;
-    border: 1px solid rgba($primary-color, 0.1);
-    
-    .technician-info {
-      display: flex;
-      flex-direction: column;
-      gap: $spacing-xs;
-      
-      .technician-name {
-        font-weight: $font-weight-semibold;
-        color: $dark-gray;
-        font-size: $font-size-lg;
-      }
-      
-      .technician-stats {
-        font-size: $font-size-sm;
-        color: $secondary-color;
-      }
-    }
-    
-    .technician-metrics {
-      display: flex;
-      gap: $spacing-lg;
-      
-      .metric {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: $spacing-xs;
-        
-        .metric-label {
-          font-size: $font-size-xs;
-          color: $secondary-color;
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
-        }
-        
-        .metric-value {
-          font-weight: $font-weight-bold;
-          color: $primary-color;
-          font-size: $font-size-lg;
-        }
-      }
-    }
-  }
-}
-
-// Additional stat card variants
-.stat-card {
-  &--danger {
-    background: linear-gradient(135deg, rgba($error-color, 0.1) 0%, rgba($error-color, 0.05) 100%);
-    border-color: rgba($error-color, 0.2);
-    
-    .stat-card__icon--danger {
-      color: $error-color;
-    }
-  }
-} 

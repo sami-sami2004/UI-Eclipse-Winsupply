@@ -1,8 +1,8 @@
+
 /**
  * Dashboard landing page. Route `/dashboard`.
  *
- * Reloads work orders on the shared WorkOrderService store, then derives stats
- * with computed() (open count, completion rate, overdue, categories, technician efficiency).
+ * Loads Bookish reviews and calculates review statistics.
  */
 import {
   Component,
@@ -14,29 +14,28 @@ import {
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { isWorkOrderOverdue, WorkOrderService } from '@app/services/work-order.service';
-import { LoadingSpinnerComponent } from '@shared/components/loading-spinner/loading-spinner.component';
-import { createComponentUiState } from '@shared/utils';
+import {
+  ReviewService
+} from '../services/review-list.service';
 
-/**
- * Data: reloadWorkOrders() fills WorkOrderService.workOrders. Dashboard reads that
- * readonly signal. Loading/error state is composed via createComponentUiState().
- */
 @Component({
   selector: 'app-dashboard',
-  imports: [RouterModule, LoadingSpinnerComponent],
+  imports: [RouterModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
 export class DashboardComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
-  private readonly workOrderService = inject(WorkOrderService);
-  readonly ui = createComponentUiState();
+  private readonly reviewService = inject(ReviewService);
 
-  readonly workOrders = this.workOrderService.workOrders;
+  readonly reviews = this.reviewService.reviews;
 
-  /** Greeting computed once at construction. Avoid heavy getters in the template. */
-  readonly welcomeMessage = signal(DashboardComponent.buildWelcomeMessage());
+  readonly isLoading = signal(false);
+  readonly error = signal<string | null>(null);
+
+  readonly welcomeMessage = signal(
+    DashboardComponent.buildWelcomeMessage()
+  );
 
   ngOnInit(): void {
     this.loadDashboardData();
@@ -44,114 +43,91 @@ export class DashboardComponent implements OnInit {
 
   private static buildWelcomeMessage(): string {
     const hour = new Date().getHours();
+
     if (hour < 12) return 'Good morning!';
     if (hour < 18) return 'Good afternoon!';
     return 'Good evening!';
   }
 
   private loadDashboardData(): void {
-    this.ui.setLoading(true);
-    this.ui.clearError();
-    this.workOrderService
-      .reloadWorkOrders()
+    this.isLoading.set(true);
+    this.error.set(null);
+
+    this.reviewService
+      .reloadReviews()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
-          this.ui.setLoading(false);
+          this.isLoading.set(false);
         },
-        error: error => {
+        error: (error: unknown) => {
           console.error('Error loading dashboard data:', error);
-          this.ui.setError('Failed to load dashboard data. Please try again.');
-          this.ui.setLoading(false);
+          this.error.set(
+            'Failed to load dashboard data. Please try again.'
+          );
+          this.isLoading.set(false);
         }
       });
   }
 
-  totalOrders = computed(() => this.workOrders().length);
-
-  openOrders = computed(
-    () => this.workOrders().filter(wo => wo.status?.code === 'OPN').length
+  readonly totalReviews = computed(
+    () => this.reviews().length
   );
 
-  inProgressOrders = computed(
-    () => this.workOrders().filter(wo => wo.status?.code === 'NPRGRS').length
+  readonly recommendedReviews = computed(
+    () => this.reviews().filter(
+      review => review.isRecommended
+    ).length
   );
 
-  completedOrders = computed(
-    () => this.workOrders().filter(wo => wo.status?.code === 'CMPLTD').length
+  readonly notRecommendedReviews = computed(
+    () => this.reviews().filter(
+      review => !review.isRecommended
+    ).length
   );
 
-  cancelledOrders = computed(
-    () => this.workOrders().filter(wo => wo.status?.code === 'CNCLD').length
-  );
+  readonly recommendationRate = computed(() => {
+    const total = this.totalReviews();
 
-  totalActiveWorkOrders = computed(() => this.openOrders() + this.inProgressOrders());
-
-  completionRate = computed(() => {
-    const total = this.totalOrders();
     if (total === 0) return 0;
-    return Math.round((this.completedOrders() / total) * 100);
+
+    return Math.round(
+      (this.recommendedReviews() / total) * 100
+    );
   });
 
-  overdueOrders = computed(
-    () => this.workOrders().filter(wo => isWorkOrderOverdue(wo)).length
-  );
+  readonly averageRating = computed(() => {
+    const reviews = this.reviews();
 
-  categoryBreakdown = computed(() => {
-    const categories = new Map<string, number>();
+    if (reviews.length === 0) return 0;
 
-    this.workOrders().forEach(wo => {
-      const categoryName = wo.category?.description ?? 'Unknown';
-      categories.set(categoryName, (categories.get(categoryName) || 0) + 1);
-    });
+    const totalRating = reviews.reduce(
+      (sum, review) => sum + review.rating,
+      0
+    );
 
-    return Array.from(categories.entries())
-      .map(([name, count]) => ({ name, count }))
-      .sort((a, b) => b.count - a.count)
-      .slice(0, 5);
+    return Number(
+      (totalRating / reviews.length).toFixed(1)
+    );
   });
 
-  technicianEfficiency = computed(() => {
-    const technicianStats = new Map<
-      string,
-      { completed: number; total: number; avgTime: number }
-    >();
+  readonly ratingBreakdown = computed(() => {
+    const reviews = this.reviews();
 
-    this.workOrders().forEach(wo => {
-      if (wo.maintenanceTechnician?.code) {
-        const techCode = wo.maintenanceTechnician.code;
-        const stats = technicianStats.get(techCode) || {
-          completed: 0,
-          total: 0,
-          avgTime: 0
-        };
+    return [5, 4, 3, 2, 1].map(rating => ({
+      name: `${rating} Stars`,
+      count: reviews.filter(
+        review => review.rating === rating
+      ).length
+    }));
+  });
 
-        stats.total++;
-        if (wo.status?.code === 'CMPLTD' && wo.appointmentCompleted) {
-          stats.completed++;
-          const requestDate = new Date(wo.dateRequested);
-          const completionDate = new Date(wo.appointmentCompleted);
-          const diffTime = completionDate.getTime() - requestDate.getTime();
-          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-          stats.avgTime += diffDays;
-        }
-
-        technicianStats.set(techCode, stats);
-      }
-    });
-
-    return Array.from(technicianStats.entries())
-      .map(([code, stats]) => ({
-        code,
-        name: `${code}`,
-        completed: stats.completed,
-        total: stats.total,
-        completionRate:
-          stats.total > 0 ? Math.round((stats.completed / stats.total) * 100) : 0,
-        avgTime: stats.completed > 0 ? Math.round(stats.avgTime / stats.completed) : 0
-      }))
-      .filter(tech => tech.total >= 2)
-      .sort((a, b) => b.completionRate - a.completionRate)
+  readonly recentReviews = computed(() => {
+    return [...this.reviews()]
+      .sort((a, b) =>
+        new Date(b.datePosted).getTime() -
+        new Date(a.datePosted).getTime()
+      )
       .slice(0, 3);
   });
 
