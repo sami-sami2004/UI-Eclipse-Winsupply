@@ -51,7 +51,7 @@ src/
         └── review-list.service.ts
 ```
 
->NOTE! I already created this in homework 2 and just used the `tree` cmd to get whats above
+> [NOTE!] I already created this in homework 2 and just used the `tree` cmd to get what's above
 
  ## Data Interfaces - Review
 
@@ -107,4 +107,7 @@ export const routes: Routes = [
   }
 ]
 ```
+
+<img width="1728" height="1084" alt="Screenshot 2026-11-12 at 12 41 01 PM" src="https://github.com/user-attachments/assets/acbc23cc-b80d-44f5-a585-4679a4da886c" />
+
 
