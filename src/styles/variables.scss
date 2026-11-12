@@ -1,0 +1,178 @@
+// =============================================================================
+// Global SCSS Variables - Campus Maintenance Work Order System
+// =============================================================================
+
+// Color Palette
+// -----------------------------------------------------------------------------
+// Primary Colors (Blue Theme)
+$primary-color: #2196f3;        // Material Blue (same as info color)
+$primary-light: #42a5f5;        // Lighter blue for hover states
+$primary-dark: #1976d2;         // Darker blue for active states
+
+$secondary-color: #717171;       // WSU Gray
+$secondary-light: #9a9a9a;       // Light gray
+$secondary-dark: #5a5a5a;        // Dark gray
+
+// Status Colors
+$status-open: #ffa726;           // Orange for open work orders
+$status-in-progress: #42a5f5;    // Blue for in-progress
+$status-completed: #66bb6a;      // Green for completed
+$status-cancelled: #ef5350;      // Red for cancelled
+
+// Priority Colors
+$priority-low: #81c784;          // Light green
+$priority-medium: #ffb74d;       // Orange
+$priority-high: #ff8a65;         // Light red
+$priority-emergency: #e53935;    // Dark red
+
+// Semantic Colors
+$success-color: #4caf50;
+$warning-color: #ff9800;
+$error-color: #f44336;
+$info-color: #2196f3;
+
+// Neutral Colors
+$white: #ffffff;
+$light-gray: #f5f5f5;
+$medium-gray: #e0e0e0;
+$dark-gray: #424242;
+$black: #212121;
+
+// Background Colors
+$background-primary: $white;
+$background-secondary: $light-gray;
+$background-dark: #fafafa;
+$background-hover: #f8f9fa;
+$background-disabled: #f5f5f5;
+
+// Border Colors
+$border-light: #e1e1e1;
+$border-medium: #cccccc;
+$border-dark: #999999;
+
+// Typography
+// -----------------------------------------------------------------------------
+// Font Families
+$font-family-primary: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+$font-family-secondary: 'Arial', sans-serif;
+$font-family-mono: 'Courier New', Courier, monospace;
+$font-family-monospace: 'Courier New', Courier, monospace;
+
+// Font Sizes
+$font-size-xs: 0.75rem;     // 12px
+$font-size-sm: 0.875rem;    // 14px
+$font-size-base: 1.125rem;  // 18px (increased from 16px)
+$font-size-md: 1.125rem;    // 18px (alias for base)
+$font-size-lg: 1.25rem;     // 20px (adjusted)
+$font-size-xl: 1.375rem;    // 22px (adjusted)
+$font-size-2xl: 1.625rem;   // 26px (adjusted)
+$font-size-3xl: 2rem;       // 32px (adjusted)
+$font-size-4xl: 2.5rem;     // 40px (adjusted)
+
+// Font Weights
+$font-weight-light: 300;
+$font-weight-normal: 400;
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+
+// Line Heights
+$line-height-tight: 1.25;
+$line-height-normal: 1.5;
+$line-height-relaxed: 1.75;
+
+// Spacing Scale
+// -----------------------------------------------------------------------------
+$spacing-xs: 0.25rem;       // 4px
+$spacing-sm: 0.5rem;        // 8px
+$spacing-md: 0.75rem;       // 12px
+$spacing-base: 1rem;        // 16px
+$spacing-lg: 1.5rem;        // 24px
+$spacing-xl: 2rem;          // 32px
+$spacing-2xl: 3rem;         // 48px
+$spacing-3xl: 4rem;         // 64px
+
+// Component Spacing
+$component-padding-sm: $spacing-sm $spacing-md;
+$component-padding-md: $spacing-md $spacing-base;
+$component-padding-lg: $spacing-base $spacing-lg;
+
+// Border Radius
+// -----------------------------------------------------------------------------
+$border-radius-none: 0;
+$border-radius-sm: 0.125rem;    // 2px
+$border-radius-md: 0.25rem;     // 4px
+$border-radius-lg: 0.5rem;      // 8px
+$border-radius-xl: 0.75rem;     // 12px
+$border-radius-full: 50%;
+
+// Shadows
+// -----------------------------------------------------------------------------
+$shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+$shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+// Transitions
+// -----------------------------------------------------------------------------
+$transition-fast: 0.15s ease-in-out;
+$transition-normal: 0.3s ease-in-out;
+$transition-slow: 0.5s ease-in-out;
+
+// Modern Responsive Breakpoints
+// -----------------------------------------------------------------------------
+// Using modern CSS breakpoint standards
+$breakpoint-xs: 0;
+$breakpoint-sm: 480px;    // Small phones
+$breakpoint-md: 768px;    // Tablets
+$breakpoint-lg: 1024px;   // Small laptops
+$breakpoint-xl: 1200px;   // Desktop
+$breakpoint-xxl: 1440px;  // Large desktop
+
+// Modern device-oriented breakpoints
+$breakpoint-mobile: $breakpoint-sm;
+$breakpoint-tablet: $breakpoint-md;
+$breakpoint-desktop: $breakpoint-lg;
+$breakpoint-wide: $breakpoint-xl;
+
+// Container Sizes (for modern container queries)
+$container-xs: 100%;
+$container-sm: 540px;
+$container-md: 720px;
+$container-lg: 960px;
+$container-xl: 1140px;
+$container-xxl: 1320px;
+
+// Modern Viewport Units
+$viewport-height-mobile: 100svh;  // Small viewport height (mobile with UI)
+$viewport-height-desktop: 100dvh; // Dynamic viewport height
+$viewport-height-large: 100lvh;   // Large viewport height
+
+// Z-Index Scale
+// -----------------------------------------------------------------------------
+$z-index-dropdown: 1000;
+$z-index-sticky: 1020;
+$z-index-fixed: 1030;
+$z-index-modal-backdrop: 1040;
+$z-index-modal: 1050;
+$z-index-popover: 1060;
+$z-index-tooltip: 1070;
+
+// Form Controls
+// -----------------------------------------------------------------------------
+$input-height-sm: 2rem;
+$input-height-md: 2.5rem;
+$input-height-lg: 3rem;
+
+$input-padding-sm: $spacing-sm;
+$input-padding-md: $spacing-md;
+$input-padding-lg: $spacing-base;
+
+// Button Sizes
+$button-height-sm: 2rem;
+$button-height-md: 2.5rem;
+$button-height-lg: 3rem;
+
+$button-padding-sm: $spacing-sm $spacing-md;
+$button-padding-md: $spacing-md $spacing-base;
+$button-padding-lg: $spacing-base $spacing-lg; 

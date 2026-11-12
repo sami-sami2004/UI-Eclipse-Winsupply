@@ -1,0 +1,533 @@
+
+@use 'sass:color';
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+// Dashboard Container
+.dashboard {
+  @include responsive-container($container-xl);
+
+  @include mobile-only {
+    padding-block: $spacing-md;
+  }
+
+  & {
+    padding-block: $spacing-lg;
+  }
+}
+
+// Header Card
+.header-card {
+  @include card($spacing-lg, $shadow-sm);
+  margin-block-end: $spacing-xl;
+
+  .header-content {
+    @include responsive-flex(row, wrap, $spacing-lg);
+
+    & {
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    @include mobile-only {
+      flex-direction: column;
+      text-align: center;
+    }
+  }
+
+  .header-text {
+    flex: 1;
+    min-width: 0;
+
+    .page-title {
+      @include responsive-text(1.75rem, 2.5rem, 3vw);
+      font-weight: $font-weight-bold;
+      color: $dark-gray;
+      margin-block: 0 $spacing-sm;
+    }
+
+    .page-subtitle {
+      font-size: $font-size-lg;
+      color: $secondary-color;
+      margin: 0;
+      font-weight: $font-weight-normal;
+    }
+  }
+
+  .header-actions {
+    @include flex-row-center;
+    gap: $spacing-md;
+
+    @include mobile-only {
+      width: 100%;
+      justify-content: center;
+      margin-top: $spacing-md;
+    }
+  }
+}
+
+// Loading State
+.dashboard-loading,
+.loading-container {
+  @include flex-center;
+  min-height: 300px;
+}
+
+.dashboard-content {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xl;
+}
+
+// Statistics Section
+.stats-section {
+  .section-title {
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    color: $dark-gray;
+    margin-bottom: $spacing-lg;
+    margin-top: 0;
+
+    @include mobile-only {
+      text-align: center;
+      font-size: $font-size-2xl;
+    }
+  }
+}
+
+// Rating Breakdown Section
+.status-section {
+  .section-title {
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    color: $dark-gray;
+    margin-bottom: $spacing-lg;
+    margin-top: 0;
+
+    @include mobile-only {
+      text-align: center;
+      font-size: $font-size-2xl;
+    }
+  }
+}
+
+// Statistics Grid
+.stats-grid {
+  display: grid;
+  gap: $spacing-xl;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+
+  @include mobile-only {
+    grid-template-columns: 1fr;
+    gap: $spacing-lg;
+  }
+
+  @include respond-to('sm') {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include respond-to('md') {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @include respond-to('lg') {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+// Statistics Cards
+.stat-card {
+  @include card($spacing-lg, $shadow-md);
+  @include flex-column-center;
+  @include touch-target;
+
+  @include hover-support {
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: $shadow-lg;
+    }
+  }
+
+  & {
+    min-height: 160px;
+    aspect-ratio: 1;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    padding: $spacing-xl;
+  }
+
+  @include mobile-only {
+    aspect-ratio: auto;
+    min-height: 100px;
+    flex-direction: row;
+    text-align: left;
+    padding: $spacing-md $spacing-lg;
+
+    .stat-card__content {
+      flex: 1;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: $spacing-md;
+    }
+  }
+
+  &__icon {
+    width: 64px;
+    height: 64px;
+    border-radius: $border-radius-full;
+    @include flex-center;
+    font-size: $font-size-2xl;
+    flex-shrink: 0;
+    margin-bottom: $spacing-md;
+
+    @include mobile-only {
+      width: 56px;
+      height: 56px;
+      font-size: $font-size-xl;
+      margin-bottom: 0;
+      margin-right: $spacing-md;
+    }
+
+    &--primary {
+      background-color: rgba($primary-color, 0.1);
+      color: $primary-color;
+    }
+
+    &--warning {
+      background-color: rgba($warning-color, 0.1);
+      color: $warning-color;
+    }
+
+    &--success {
+      background-color: rgba($success-color, 0.1);
+      color: $success-color;
+    }
+
+    &--danger {
+      background-color: rgba($error-color, 0.1);
+      color: $error-color;
+    }
+  }
+
+  &__content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__value {
+    font-size: $font-size-3xl;
+    font-weight: $font-weight-bold;
+    color: $dark-gray;
+    margin: 0 0 $spacing-sm 0;
+    line-height: 1.1;
+
+    @include mobile-only {
+      font-size: $font-size-2xl;
+      margin: 0;
+      order: 2;
+      flex-shrink: 0;
+    }
+  }
+
+  &__label {
+    font-size: $font-size-base;
+    color: $secondary-color;
+    margin: 0;
+    font-weight: $font-weight-medium;
+    line-height: 1.4;
+
+    @include mobile-only {
+      font-size: $font-size-base;
+      order: 1;
+      flex: 1;
+      min-width: 0;
+    }
+  }
+
+  &--danger {
+    background: linear-gradient(
+      135deg,
+      rgba($error-color, 0.1) 0%,
+      rgba($error-color, 0.05) 100%
+    );
+    border-color: rgba($error-color, 0.2);
+  }
+}
+
+// Main Content Area
+.main-content {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xl;
+}
+
+// Content Cards
+.content-card {
+  @include card($spacing-lg, $shadow-md);
+
+  @include hover-support {
+    &:hover {
+      box-shadow: $shadow-lg;
+    }
+  }
+
+  & {
+    transition: box-shadow 0.2s ease;
+  }
+
+  .card-header {
+    margin-bottom: $spacing-lg;
+    padding-bottom: $spacing-md;
+    border-bottom: 1px solid $border-light;
+
+    .card-title {
+      font-size: $font-size-lg;
+      font-weight: $font-weight-bold;
+      color: $dark-gray;
+      margin: 0;
+    }
+  }
+}
+
+// Rating Breakdown Grid
+.status-chips-grid {
+  display: grid;
+  gap: $spacing-md;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+
+  @include mobile-only {
+    grid-template-columns: 1fr;
+    gap: $spacing-sm;
+  }
+
+  @include respond-to('sm') {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include respond-to('lg') {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+// Rating Chips
+.status-chip {
+  @include flex-row-center;
+  @include touch-target;
+
+  @include hover-support {
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: $shadow-md;
+    }
+  }
+
+  & {
+    gap: $spacing-md;
+    padding: $spacing-lg $spacing-xl;
+    border-radius: $border-radius-xl;
+    border: 2px solid transparent;
+    min-height: 80px;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  @include mobile-only {
+    padding: $spacing-md $spacing-lg;
+    min-height: 70px;
+  }
+
+  &__content {
+    @include flex-row-center;
+    justify-content: space-between;
+    width: 100%;
+    margin-left: $spacing-lg;
+  }
+
+  &__label {
+    font-size: $font-size-base;
+    font-weight: $font-weight-medium;
+    color: $dark-gray;
+  }
+
+  &__value {
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    color: $dark-gray;
+    line-height: 1;
+  }
+
+  &--open {
+    background: rgba($status-open, 0.1);
+    border-color: rgba($status-open, 0.2);
+
+    &:hover {
+      background: rgba($status-open, 0.15);
+    }
+  }
+
+  &--progress {
+    background: rgba($status-in-progress, 0.1);
+    border-color: rgba($status-in-progress, 0.2);
+
+    &:hover {
+      background: rgba($status-in-progress, 0.15);
+    }
+  }
+
+  &--completed {
+    background: rgba($status-completed, 0.1);
+    border-color: rgba($status-completed, 0.2);
+
+    &:hover {
+      background: rgba($status-completed, 0.15);
+    }
+  }
+
+  &--cancelled {
+    background: rgba($status-cancelled, 0.1);
+    border-color: rgba($status-cancelled, 0.2);
+
+    &:hover {
+      background: rgba($status-cancelled, 0.15);
+    }
+  }
+}
+
+// Header Action Buttons
+.header-actions .action-button {
+  min-height: 80px;
+  min-width: 140px;
+
+  @include mobile-only {
+    min-height: 70px;
+    min-width: 120px;
+  }
+}
+
+.action-button {
+  @include card($spacing-md, $shadow-sm);
+  @include flex-column-center;
+  text-decoration: none;
+  color: inherit;
+  gap: $spacing-sm;
+  min-height: 120px;
+  border: 2px solid transparent;
+
+  @include hover-support {
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: $shadow-md;
+      text-decoration: none;
+    }
+  }
+
+  & {
+    transition: all 0.2s ease;
+  }
+
+  &__icon {
+    width: 48px;
+    height: 48px;
+    border-radius: $border-radius-full;
+    @include flex-center;
+    font-size: $font-size-xl;
+    font-weight: bold;
+  }
+
+  &__content {
+    text-align: center;
+  }
+
+  &__title {
+    font-size: $font-size-md;
+    font-weight: $font-weight-semibold;
+    color: $dark-gray;
+    margin-bottom: $spacing-xs;
+  }
+
+  &__subtitle {
+    font-size: $font-size-sm;
+    color: $secondary-color;
+    font-weight: $font-weight-medium;
+  }
+
+  &--primary {
+    border-color: rgba($primary-color, 0.2);
+
+    .action-button__icon {
+      background: rgba($primary-color, 0.1);
+      color: $primary-color;
+    }
+
+    &:hover {
+      border-color: $primary-color;
+    }
+  }
+
+  &--secondary {
+    border-color: rgba($secondary-color, 0.2);
+
+    .action-button__icon {
+      background: rgba($secondary-color, 0.1);
+      color: $secondary-color;
+    }
+
+    &:hover {
+      border-color: $secondary-color;
+    }
+  }
+}
+
+// Empty State Card
+.empty-state-card {
+  @include card($spacing-xl, $shadow-md);
+
+  .empty-state-content {
+    @include flex-column-center;
+    text-align: center;
+    gap: $spacing-md;
+
+    .empty-state-icon {
+      font-size: 4rem;
+      opacity: 0.5;
+    }
+
+    .empty-state-title {
+      font-size: $font-size-xl;
+      font-weight: $font-weight-bold;
+      color: $dark-gray;
+      margin: 0;
+    }
+
+    .empty-state-message {
+      color: $secondary-color;
+      margin: 0;
+      max-width: 400px;
+      line-height: 1.5;
+    }
+  }
+}
+
+// Buttons
+.btn {
+  @include button-base;
+
+  &.btn-primary {
+    @include button-variant($primary-color);
+  }
+
+  &.btn-secondary {
+    @include button-variant($secondary-color);
+  }
+
+  &.btn-danger {
+    @include button-variant($error-color);
+  }
+
+  &.btn-sm {
+    @include button-size('sm');
+  }
+}
