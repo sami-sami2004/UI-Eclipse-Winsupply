@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
+import { GenreFilter } from './components/genre-filter/genre-filter';
+import { BookList } from './components/book-list/book-list';
 
 @Component({
-  imports: [],
+  imports: [GenreFilter, BookList],
   selector: 'app-dashboard',
   styleUrl: './dashboard.scss',
   templateUrl: './dashboard.html',
