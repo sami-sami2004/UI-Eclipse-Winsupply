@@ -1,0 +1,206 @@
+<!--
+  Dashboard template. Binds to DashboardComponent signals/computed values.
+  Data comes from WorkOrderService.workOrders after reloadWorkOrders(); stats use status?.code (OPN, NPRGRS, …).
+-->
+<div class="dashboard">
+  <!-- Header Card -->
+  <div class="header-card">
+    <div class="header-content">
+      <div class="header-text">
+        <h1 class="page-title">{{ welcomeMessage() }}</h1>
+        <p class="page-subtitle">Here's a summary of the current maintenance status on campus.</p>
+      </div>
+      <div class="header-actions">
+        <a routerLink="/review/create" class="action-button action-button--primary">
+          <div class="action-button__icon">+</div>
+          <div class="action-button__content">
+            <div class="action-button__title">Create New</div>
+            <div class="action-button__subtitle">Review</div>
+          </div>
+        </a>
+        
+        <a routerLink="/review/list" class="action-button action-button--secondary">
+          <div class="action-button__icon">📋</div>
+          <div class="action-button__content">
+            <div class="action-button__title">View All</div>
+            <div class="action-button__subtitle">Reviews</div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  @if (ui.isLoading()) {
+    <div class="loading-container">
+      <app-loading-spinner size="lg" message="Loading dashboard data..."></app-loading-spinner>
+    </div>
+  }
+
+  <!-- Error State -->
+  @if (ui.error() && !ui.isLoading()) {
+    <div class="empty-state-card" role="alert">
+      <div class="card-body">
+        <div class="empty-state-content">
+          <div class="empty-state-icon">⚠️</div>
+          <h2 class="empty-state-title">Unable to load dashboard</h2>
+          <p class="empty-state-message">{{ ui.error() }}</p>
+          <button type="button" class="btn btn-primary" (click)="loadSummary()">
+            Retry
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Dashboard Content -->
+  @if (!ui.isLoading() && !ui.error() && reviews().length > 0) {
+    <div class="dashboard-content">
+    
+    <!-- Summary Stats Grid -->
+    <section class="stats-section">
+      <h2 class="section-title">Overview</h2>
+      <div class="stats-grid">
+        <div class="stat-card stat-card--primary">
+          <div class="stat-card__icon stat-card__icon--primary">📈</div>
+          <div class="stat-card__content">
+            <div class="stat-card__value">{{ totalReviews() }}</div>
+            <div class="stat-card__label">Total Reviews</div>
+          </div>
+        </div>
+
+        <div class="stat-card stat-card--warning">
+          <div class="stat-card__icon stat-card__icon--warning">🛠️</div>
+          <div class="stat-card__content">
+            <div class="stat-card__value">{{ totalActiveWorkOrders() }}</div>
+            <div class="stat-card__label">Active Work Orders</div>
+          </div>
+        </div>
+
+        <div class="stat-card stat-card--success">
+          <div class="stat-card__icon stat-card__icon--success">✅</div>
+          <div class="stat-card__content">
+            <div class="stat-card__value">{{ completionRate() }}%</div>
+            <div class="stat-card__label">Completion Rate</div>
+          </div>
+        </div>
+
+
+        <div class="stat-card stat-card--danger">
+          <div class="stat-card__icon stat-card__icon--danger">⚠️</div>
+          <div class="stat-card__content">
+            <div class="stat-card__value">{{ overdueOrders() }}</div>
+            <div class="stat-card__label">Overdue Orders</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Content Cards -->
+    <div class="main-content">
+      
+      <!-- Status Breakdown Section -->
+      <section class="status-section">
+        <h2 class="section-title">Status Breakdown</h2>
+        <div class="status-chips-grid">
+          <div class="status-chip status-chip--open">
+            <div class="status-chip__indicator"></div>
+            <div class="status-chip__content">
+              <span class="status-chip__label">Open</span>
+              <span class="status-chip__value">{{ openOrders() }}</span>
+            </div>
+          </div>
+          
+          <div class="status-chip status-chip--progress">
+            <div class="status-chip__indicator"></div>
+            <div class="status-chip__content">
+              <span class="status-chip__label">In Progress</span>
+              <span class="status-chip__value">{{ inProgressOrders() }}</span>
+            </div>
+          </div>
+          
+          <div class="status-chip status-chip--completed">
+            <div class="status-chip__indicator"></div>
+            <div class="status-chip__content">
+              <span class="status-chip__label">Completed</span>
+              <span class="status-chip__value">{{ completedOrders() }}</span>
+            </div>
+          </div>
+          
+          <div class="status-chip status-chip--cancelled">
+            <div class="status-chip__indicator"></div>
+            <div class="status-chip__content">
+              <span class="status-chip__label">Cancelled</span>
+              <span class="status-chip__value">{{ cancelledOrders() }}</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Category Breakdown Section -->
+      <section class="category-section">
+        <h2 class="section-title">Top Categories</h2>
+        <div class="category-list">
+          @for (category of categoryBreakdown(); track category.name) {
+            <div class="category-item">
+              <div class="category-info">
+                <span class="category-name">{{ category.name }}</span>
+                <span class="category-count">{{ category.count }} orders</span>
+              </div>
+              <div class="category-bar">
+                <div class="category-bar__fill" 
+                     [style.width.%]="(category.count / totalOrders()) * 100">
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      </section>
+
+      <!-- Technician Efficiency Section -->
+      @if (technicianEfficiency().length > 0) {
+        <section class="technician-section">
+          <h2 class="section-title">Top Technicians</h2>
+          <div class="technician-list">
+            @for (tech of technicianEfficiency(); track tech.code) {
+              <div class="technician-item">
+                <div class="technician-info">
+                  <span class="technician-name">{{ tech.name }}</span>
+                  <span class="technician-stats">{{ tech.completed }}/{{ tech.total }} completed</span>
+                </div>
+                <div class="technician-metrics">
+                  <div class="metric">
+                    <span class="metric-label">Rate</span>
+                    <span class="metric-value">{{ tech.completionRate }}%</span>
+                  </div>
+                  <div class="metric">
+                    <span class="metric-label">Avg. Time</span>
+                    <span class="metric-value">{{ tech.avgTime }}d</span>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        </section>
+      }
+      
+    </div>
+    </div>
+  }
+
+  <!-- Empty State Card -->
+  @if (!ui.isLoading() && !ui.error() && workOrders().length === 0) {
+    <div class="empty-state-card">
+    <div class="card-body">
+      <div class="empty-state-content">
+        <div class="empty-state-icon">📊</div>
+        <h2 class="empty-state-title">No work orders yet</h2>
+        <p class="empty-state-message">Get started by creating your first work order.</p>
+        <a routerLink="/work-orders/create" class="btn btn-primary">
+          Create Work Order
+        </a>
+      </div>
+    </div>
+    </div>
+  }
+</div>
