@@ -31,12 +31,12 @@ export const routes: Routes = [
       {
         path: 'list',
         loadComponent: () =>
-          import('./review-list/review-list.component').then(
+            import('./review-list/review-list.component').then(
             m => m.ReviewListComponent
-          )
-      }
+        )
+    }
     ]
-  },
+},
 
   // Default redirect
   {
@@ -50,4 +50,4 @@ export const routes: Routes = [
     path: '**',
     redirectTo: '/dashboard'
   }
-];
+]
