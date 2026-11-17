@@ -2,13 +2,11 @@
 /**
  * Create review page. Route `/review/create`.
  *
- * Reactive form → ReviewService.createReview()
- * → POST /bookish/review.
+ * Create Book → receive bookId → Create Review.
  */
 
 import {
   Component,
-  OnInit,
   signal,
   computed,
   inject,
@@ -19,7 +17,6 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 
 import {
-  FormBuilder,
   FormControl,
   FormGroup,
   Validators,
@@ -28,7 +25,7 @@ import {
 
 import { HttpClient } from '@angular/common/http';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { merge } from 'rxjs';
+import { merge, switchMap, map } from 'rxjs';
 
 import {
   ReviewService,
@@ -38,10 +35,23 @@ import {
 interface Book {
   bookId: number;
   title: string;
+  author: string;
+  genreId: number;
+  pageCount: number;
+}
+
+interface BookCreateRequest {
+  title: string;
+  author: string;
+  genreId: number;
+  pageCount: number;
 }
 
 interface ReviewFormControls {
-  bookId: FormControl<number>;
+  title: FormControl<string>;
+  author: FormControl<string>;
+  genreId: FormControl<number | null>;
+  pageCount: FormControl<number | null>;
   rating: FormControl<number>;
   reviewText: FormControl<string>;
   isRecommended: FormControl<boolean | null>;
@@ -55,7 +65,10 @@ interface FieldUiState {
 }
 
 const FIELD_LABELS: Record<FormFieldName, string> = {
-  bookId: 'Book',
+  title: 'Book Title',
+  author: 'Author',
+  genreId: 'Genre ID',
+  pageCount: 'Page Count',
   rating: 'Rating',
   reviewText: 'Review',
   isRecommended: 'Recommendation'
@@ -72,27 +85,30 @@ const FIELD_LABELS: Record<FormFieldName, string> = {
   templateUrl: './review-create.component.html',
   styleUrl: './review-create.component.scss'
 })
-export class ReviewCreateComponent implements OnInit {
+export class ReviewCreateComponent {
 
   private readonly destroyRef = inject(DestroyRef);
-  private readonly fb = inject(FormBuilder);
   private readonly reviewService = inject(ReviewService);
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
 
   readonly reviewForm: FormGroup<ReviewFormControls>;
 
-  isSubmitting = signal(false);
-  errorMessage = signal('');
-  books = signal<Book[]>([]);
+  readonly isSubmitting = signal(false);
+  readonly errorMessage = signal('');
 
   private readonly formEpoch = signal(0);
 
-  readonly fieldState = computed<Record<FormFieldName, FieldUiState>>(() => {
+  readonly fieldState = computed<
+    Record<FormFieldName, FieldUiState>
+  >(() => {
     this.formEpoch();
 
     return {
-      bookId: this.describeField('bookId'),
+      title: this.describeField('title'),
+      author: this.describeField('author'),
+      genreId: this.describeField('genreId'),
+      pageCount: this.describeField('pageCount'),
       rating: this.describeField('rating'),
       reviewText: this.describeField('reviewText'),
       isRecommended: this.describeField('isRecommended')
@@ -101,13 +117,32 @@ export class ReviewCreateComponent implements OnInit {
 
   constructor() {
     this.reviewForm = new FormGroup<ReviewFormControls>({
-      bookId: new FormControl(0, {
+      title: new FormControl('', {
         nonNullable: true,
         validators: [
           Validators.required,
-          Validators.min(1)
+          Validators.maxLength(50)
         ]
       }),
+
+      author: new FormControl('', {
+        nonNullable: true,
+        validators: [
+          Validators.required,
+          Validators.maxLength(50)
+        ]
+      }),
+
+      genreId: new FormControl<number | null>(null, [
+        Validators.required,
+        Validators.min(1)
+      ]),
+
+      pageCount: new FormControl<number | null>(null, [
+        Validators.required,
+        Validators.min(1),
+        Validators.max(32767)
+      ]),
 
       rating: new FormControl(0, {
         nonNullable: true,
@@ -141,27 +176,6 @@ export class ReviewCreateComponent implements OnInit {
       .subscribe(() => this.formEpoch.update(n => n + 1));
   }
 
-  ngOnInit(): void {
-    this.loadBooks();
-  }
-
-  private loadBooks(): void {
-    this.http
-      .get<Book[]>('http://localhost:8080/bookish/book')
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: books => {
-          this.books.set(books);
-        },
-        error: error => {
-          console.error('Failed to load books:', error);
-          this.errorMessage.set(
-            'Failed to load books. Please check that the API is running.'
-          );
-        }
-      });
-  }
-
   onSubmit(): void {
     if (this.isSubmitting()) {
       return;
@@ -172,31 +186,50 @@ export class ReviewCreateComponent implements OnInit {
       return;
     }
 
+    const raw = this.reviewForm.getRawValue();
+
+    if (!raw.title.trim() || !raw.author.trim() ||
+        !raw.reviewText.trim()) {
+      this.errorMessage.set('Please complete all required fields.');
+      return;
+    }
+
     this.isSubmitting.set(true);
     this.errorMessage.set('');
 
-    const raw = this.reviewForm.getRawValue();
-
-    const request: ReviewCreateRequest = {
-      bookId: Number(raw.bookId),
-      rating: Number(raw.rating),
-      reviewText: raw.reviewText.trim(),
-      isRecommended: raw.isRecommended!
+    const bookRequest: BookCreateRequest = {
+      title: raw.title.trim(),
+      author: raw.author.trim(),
+      genreId: Number(raw.genreId),
+      pageCount: Number(raw.pageCount)
     };
 
-    this.reviewService
-      .createReview(request)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: review => {
-          this.isSubmitting.set(false);
+    this.http.post<Book>(
+      'http://localhost:8080/bookish/book',
+      bookRequest
+    )
+      .pipe(
+        switchMap(book => {
+          const reviewRequest: ReviewCreateRequest = {
+            bookId: book.bookId,
+            rating: raw.rating,
+            reviewText: raw.reviewText.trim(),
+            isRecommended: raw.isRecommended!
+          };
 
+          return this.reviewService.createReview(reviewRequest);
+        }),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe({
+        next: () => {
+          this.isSubmitting.set(false);
           void this.router.navigate(['/review/list']);
         },
         error: error => {
           console.error('Failed to create review:', error);
           this.errorMessage.set(
-            'Failed to create review. Please try again.'
+            'Failed to create book or review. Please try again.'
           );
           this.isSubmitting.set(false);
         }
@@ -209,7 +242,10 @@ export class ReviewCreateComponent implements OnInit {
 
   onReset(): void {
     this.reviewForm.reset({
-      bookId: 0,
+      title: '',
+      author: '',
+      genreId: null,
+      pageCount: null,
       rating: 0,
       reviewText: '',
       isRecommended: null
@@ -252,19 +288,19 @@ export class ReviewCreateComponent implements OnInit {
       };
     }
 
-    if (errors['minlength']) {
-      return {
-        invalid: true,
-        message:
-          `${label} must be at least ${errors['minlength'].requiredLength} characters.`
-      };
-    }
-
     if (errors['maxlength']) {
       return {
         invalid: true,
         message:
           `${label} cannot exceed ${errors['maxlength'].requiredLength} characters.`
+      };
+    }
+
+    if (errors['minlength']) {
+      return {
+        invalid: true,
+        message:
+          `${label} must be at least ${errors['minlength'].requiredLength} characters.`
       };
     }
 
