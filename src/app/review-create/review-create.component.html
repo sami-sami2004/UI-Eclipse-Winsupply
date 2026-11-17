@@ -1,9 +1,6 @@
 
-<!--
-  Create review. Reactive form bound to reviewForm in the component.
-  Uses fieldState() for validation messages.
--->
-<div class="work-order-form">
+<!-- Create Review Form -->
+<div class="review-form">
   <div class="form-header">
     <div class="header-content">
       <div class="breadcrumb-nav">
@@ -30,44 +27,109 @@
     <form
       [formGroup]="reviewForm"
       (ngSubmit)="onSubmit()"
-      class="work-order-form">
+      class="review-form">
 
-      <!-- Review Details -->
       <div class="form-section">
         <div class="section-header">
           <h2 class="section-title">
             <span class="section-icon">📖</span>
-            Review Details
+            Book Details
           </h2>
         </div>
 
         <div class="form-grid">
 
-          <!-- Book -->
+          <!-- Book Title -->
           <div class="form-field">
-            <label for="bookId" class="field-label required">
-              Book
+            <label for="title" class="field-label required">
+              Book Title
             </label>
-            <select
-              id="bookId"
-              class="field-select"
-              [class.invalid]="fieldState().bookId.invalid"
-              formControlName="bookId"
-              [attr.aria-invalid]="fieldState().bookId.invalid"
-              [attr.aria-describedby]="fieldState().bookId.invalid ? 'bookId-error' : null">
-              <option [ngValue]="0">Select book...</option>
-              @for (book of books(); track book.bookId) {
-                <option [ngValue]="book.bookId">
-                  {{ book.title }}
-                </option>
-              }
-            </select>
-            @if (fieldState().bookId.invalid) {
-              <div id="bookId-error" class="field-error">
-                {{ fieldState().bookId.message }}
+            <input
+              id="title"
+              type="text"
+              class="field-input"
+              formControlName="title"
+              [class.invalid]="fieldState().title.invalid"
+              placeholder="Enter the book title">
+            @if (fieldState().title.invalid) {
+              <div class="field-error">
+                {{ fieldState().title.message }}
               </div>
             }
           </div>
+
+          <!-- Author -->
+          <div class="form-field">
+            <label for="author" class="field-label required">
+              Author
+            </label>
+            <input
+              id="author"
+              type="text"
+              class="field-input"
+              formControlName="author"
+              [class.invalid]="fieldState().author.invalid"
+              placeholder="Enter the author's name">
+            @if (fieldState().author.invalid) {
+              <div class="field-error">
+                {{ fieldState().author.message }}
+              </div>
+            }
+          </div>
+
+          <!-- Page Count -->
+          <div class="form-field">
+            <label for="pageCount" class="field-label required">
+              Page Count
+            </label>
+            <input
+              id="pageCount"
+              type="number"
+              min="1"
+              max="32767"
+              class="field-input"
+              formControlName="pageCount"
+              [class.invalid]="fieldState().pageCount.invalid"
+              placeholder="Enter number of pages">
+            @if (fieldState().pageCount.invalid) {
+              <div class="field-error">
+                {{ fieldState().pageCount.message }}
+              </div>
+            }
+          </div>
+
+          <!-- Genre -->
+          <div class="form-field">
+            <label for="genreId" class="field-label required">
+              Genre ID
+            </label>
+            <input
+              id="genreId"
+              type="number"
+              min="1"
+              class="field-input"
+              formControlName="genreId"
+              [class.invalid]="fieldState().genreId.invalid"
+              placeholder="Enter an existing genre ID">
+            @if (fieldState().genreId.invalid) {
+              <div class="field-error">
+                {{ fieldState().genreId.message }}
+              </div>
+            }
+          </div>
+
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span class="section-icon">⭐</span>
+            Review Details
+          </h2>
+        </div>
+
+        <div class="form-grid">
 
           <!-- Rating -->
           <div class="form-field">
@@ -77,10 +139,8 @@
             <select
               id="rating"
               class="field-select"
-              [class.invalid]="fieldState().rating.invalid"
               formControlName="rating"
-              [attr.aria-invalid]="fieldState().rating.invalid"
-              [attr.aria-describedby]="fieldState().rating.invalid ? 'rating-error' : null">
+              [class.invalid]="fieldState().rating.invalid">
               <option [ngValue]="0">Select rating...</option>
               <option [ngValue]="1">1 Star</option>
               <option [ngValue]="2">2 Stars</option>
@@ -89,29 +149,8 @@
               <option [ngValue]="5">5 Stars</option>
             </select>
             @if (fieldState().rating.invalid) {
-              <div id="rating-error" class="field-error">
+              <div class="field-error">
                 {{ fieldState().rating.message }}
-              </div>
-            }
-          </div>
-
-          <!-- Review Text -->
-          <div class="form-field form-field-full">
-            <label for="reviewText" class="field-label required">
-              Review
-            </label>
-            <textarea
-              id="reviewText"
-              class="field-textarea"
-              [class.invalid]="fieldState().reviewText.invalid"
-              formControlName="reviewText"
-              rows="5"
-              placeholder="What did you think about this book?"
-              [attr.aria-invalid]="fieldState().reviewText.invalid"
-              [attr.aria-describedby]="fieldState().reviewText.invalid ? 'reviewText-error' : null"></textarea>
-            @if (fieldState().reviewText.invalid) {
-              <div id="reviewText-error" class="field-error">
-                {{ fieldState().reviewText.message }}
               </div>
             }
           </div>
@@ -124,17 +163,41 @@
             <select
               id="isRecommended"
               class="field-select"
-              formControlName="isRecommended">
+              formControlName="isRecommended"
+              [class.invalid]="fieldState().isRecommended.invalid">
               <option [ngValue]="null">Select an option...</option>
               <option [ngValue]="true">Yes</option>
               <option [ngValue]="false">No</option>
             </select>
+            @if (fieldState().isRecommended.invalid) {
+              <div class="field-error">
+                {{ fieldState().isRecommended.message }}
+              </div>
+            }
+          </div>
+
+          <!-- Review Text -->
+          <div class="form-field form-field-full">
+            <label for="reviewText" class="field-label required">
+              Review
+            </label>
+            <textarea
+              id="reviewText"
+              class="field-textarea"
+              formControlName="reviewText"
+              [class.invalid]="fieldState().reviewText.invalid"
+              rows="5"
+              placeholder="What did you think about this book?"></textarea>
+            @if (fieldState().reviewText.invalid) {
+              <div class="field-error">
+                {{ fieldState().reviewText.message }}
+              </div>
+            }
           </div>
 
         </div>
       </div>
 
-      <!-- Form Actions -->
       <div class="form-actions">
         <button
           type="button"
@@ -155,7 +218,7 @@
           class="btn btn-primary"
           [disabled]="isSubmitting()">
           <span class="btn-icon">➕</span>
-          Create Review
+          {{ isSubmitting() ? 'Creating...' : 'Create Review' }}
         </button>
       </div>
 
