@@ -7,6 +7,7 @@
 
 import {
   Component,
+  OnInit,
   signal,
   computed,
   inject,
@@ -31,6 +32,11 @@ import {
   ReviewService,
   ReviewCreateRequest
 } from '../services/review-list.service';
+
+interface Genre {
+  genreId: number;
+  genreName: string;
+}
 
 interface Book {
   bookId: number;
@@ -85,7 +91,7 @@ const FIELD_LABELS: Record<FormFieldName, string> = {
   templateUrl: './review-create.component.html',
   styleUrl: './review-create.component.scss'
 })
-export class ReviewCreateComponent {
+export class ReviewCreateComponent implements OnInit {
 
   private readonly destroyRef = inject(DestroyRef);
   private readonly reviewService = inject(ReviewService);
@@ -96,6 +102,7 @@ export class ReviewCreateComponent {
 
   readonly isSubmitting = signal(false);
   readonly errorMessage = signal('');
+  readonly genres = signal<Genre[]>([]);
 
   private readonly formEpoch = signal(0);
 
@@ -174,6 +181,34 @@ export class ReviewCreateComponent {
     )
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => this.formEpoch.update(n => n + 1));
+  }
+
+
+  ngOnInit(): void {
+    this.loadGenres();
+  }
+
+  private loadGenres(): void {
+    this.http
+      .get<Genre[] | { data: Genre[] }>(
+        'http://localhost:8080/bookish/genres'
+      )
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: response => {
+          console.log('Genres from backend:', response);
+
+          const genres = Array.isArray(response)
+            ? response
+            : response.data;
+
+          this.genres.set(genres ?? []);
+        },
+        error: error => {
+          console.error('Failed to load genres:', error);
+          this.errorMessage.set('Failed to load genres.');
+        }
+      });
   }
 
   onSubmit(): void {

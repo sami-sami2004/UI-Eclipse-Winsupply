@@ -12,6 +12,7 @@ import { ApiService } from './api.service';
 export interface Review {
   reviewId: number;
   bookId: number;
+  bookTitle?: string;
   rating: number;
   reviewText: string;
   isRecommended: boolean;

@@ -360,4 +360,17 @@ export class ReviewListComponent implements OnInit {
       (_, i) => start + i
     );
   }
-}
+
+    formatReviewDate(value: string | number[] | null | undefined): Date | null {
+      if (!value) return null;
+
+      if (Array.isArray(value)) {
+        const [year, month, day, hour = 0, minute = 0, second = 0] = value;
+        return new Date(year, month - 1, day, hour, minute, second);
+      }
+
+      const date = new Date(value);
+      return Number.isNaN(date.getTime()) ? null : date;
+    }
+  }
+

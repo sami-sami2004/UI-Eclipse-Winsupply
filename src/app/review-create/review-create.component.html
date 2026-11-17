@@ -101,35 +101,30 @@
           <!-- Genre -->
           <div class="form-field">
             <label for="genreId" class="field-label required">
-              Genre ID
+              Genre
             </label>
-            <input
+
+            <select
               id="genreId"
-              type="number"
-              min="1"
-              class="field-input"
+              class="field-select"
               formControlName="genreId"
-              [class.invalid]="fieldState().genreId.invalid"
-              placeholder="Enter an existing genre ID">
+              [class.invalid]="fieldState().genreId.invalid">
+
+              <option [ngValue]="null">Select a genre...</option>
+
+              @for (genre of genres(); track genre.genreId) {
+                <option [ngValue]="genre.genreId">
+                  {{ genre.genreName }}
+                </option>
+              }
+            </select>
+
             @if (fieldState().genreId.invalid) {
               <div class="field-error">
                 {{ fieldState().genreId.message }}
               </div>
             }
           </div>
-
-        </div>
-      </div>
-
-      <div class="form-section">
-        <div class="section-header">
-          <h2 class="section-title">
-            <span class="section-icon">⭐</span>
-            Review Details
-          </h2>
-        </div>
-
-        <div class="form-grid">
 
           <!-- Rating -->
           <div class="form-field">

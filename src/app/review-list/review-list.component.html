@@ -248,11 +248,11 @@
                     <a
                       [routerLink]="['/review', review.reviewId]"
                       class="review-title">
-                      Review #{{ review.reviewId }}
+                      {{ review.bookTitle || 'Book #' + review.bookId }}
                     </a>
 
                     <div class="review-id">
-                      Book #{{ review.bookId }}
+                      Review #{{ review.reviewId }} 
                     </div>
                   </div>
 
@@ -312,7 +312,7 @@
                       <span class="detail-label">Posted:</span>
                       <div class="date-content">
                         <div class="date-value">
-                          {{ review.datePosted | date:'MMM d, y' }}
+                          {{ formatReviewDate(review.datePosted) | date:'medium' }}
                         </div>
                       </div>
                     </div>
