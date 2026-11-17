@@ -1,2 +1,18 @@
-<h2>Comment Thread</h2>
-<p>Placeholder for all list of comments on a review Owner: Sami Mohammad</p>
+<section class="comment-thread">
+  <h2>Comments</h2>
+
+  <div class="comment-form">
+  <input
+    type="text"
+    placeholder="Add a comment..."
+    [value]="newCommentText()"
+    (input)="onInput($event)"
+  />
+  <button type="button" (click)="addComment()">Submit</button>
+</div>
+  @for (comment of comments(); track comment.id) {
+    <app-comment-card [comment]="comment" />
+  } @empty {
+    <p>No comments yet.</p>
+  }
+</section>

@@ -1,2 +1,5 @@
-<h2>Comment Card</h2>
-<p>Placeholder for a single comment. Owner: Sami Mohammad.</p>
+<article class="comment-card">
+  <h3>{{ comment().author }}</h3>
+  <p>{{ comment().text }}</p>
+  <small>{{ comment().createdAt | date: 'short' }}</small>
+</article>

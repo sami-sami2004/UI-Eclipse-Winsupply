@@ -1,0 +1,67 @@
+:host {
+    display: block;
+}
+
+.comment-thread {
+    max-width: 640px;
+    margin: 2rem auto;
+    padding: 1.5rem;
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+h2 {
+    margin: 0 0 1rem;
+    font-size: 1.4rem;
+    color: #1f2937;
+}
+
+  .comment-form {
+    display: flex;
+    gap: 12px;               // space between the box and the button
+    margin-bottom: 1.25rem;
+  }
+
+input {
+    flex: 1;
+    padding: 0.6rem 0.8rem;
+    font-size: 0.95rem;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+
+    &:focus {
+      border-color: #4b1414;
+      box-shadow: 0 0 0 3px rgba(75, 20, 20, 0.2);
+    }
+  }
+
+  button {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #ffffff;
+    background: #4b1414;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s;
+
+    &:hover {
+      background: #4b1414;
+    }
+
+    &:active {
+      transform: translateY(1px);
+    }
+  }
+
+  > p {
+    text-align: center;
+    color: #9ca3af;
+    font-style: italic;
+  }
