@@ -1,0 +1,150 @@
+
+<!-- Review Detail -->
+<div class="review-detail">
+
+  <!-- Navigation Header -->
+  <header class="navigation-header">
+    <nav class="breadcrumb-nav" aria-label="Breadcrumb navigation">
+      <ol class="breadcrumb-list">
+        <li class="breadcrumb-item">
+          <a routerLink="/dashboard" class="breadcrumb-link">
+            Dashboard
+          </a>
+        </li>
+
+        <li class="breadcrumb-separator">›</li>
+
+        <li class="breadcrumb-item">
+          <a routerLink="/review/list" class="breadcrumb-link">
+            Reviews
+          </a>
+        </li>
+
+        <li class="breadcrumb-separator">›</li>
+
+        <li class="breadcrumb-item breadcrumb-current">
+          Details
+        </li>
+      </ol>
+    </nav>
+
+    <div class="header-actions">
+      <button
+        class="btn btn-secondary btn-back"
+        type="button"
+        (click)="onBack()">
+        ← Back to List
+      </button>
+    </div>
+  </header>
+
+  <!-- Loading State -->
+  @if (isLoading()) {
+    <section class="loading-section">
+      <p>Loading review details...</p>
+    </section>
+  }
+
+  <!-- Error State -->
+  @if (error() && !isLoading()) {
+    <section class="error-section" role="alert">
+      <h2>Unable to Load Review</h2>
+      <p>{{ error() }}</p>
+
+      <button
+        class="btn btn-primary"
+        type="button"
+        (click)="onBack()">
+        Back to List
+      </button>
+    </section>
+  }
+
+  <!-- Review Details -->
+  @if (review(); as currentReview) {
+    @if (!isLoading()) {
+
+      <!-- Review Header -->
+      <section class="review-header">
+        <div class="header-content">
+          <div class="title-section">
+            <h1 class="review-title">
+              {{ bookTitle() }}
+            </h1>
+
+            <div class="review-meta">
+              <span class="meta-item">
+                Review #{{ currentReview.reviewId }}
+              </span>
+
+              <span class="meta-item">
+                {{ currentReview.rating }}/5 Stars
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Review Content -->
+      <div class="review-content">
+        <section class="content-section overview-section">
+
+          <div class="section-header">
+            <h2 class="section-title">
+              📖 Review Overview
+            </h2>
+          </div>
+
+          <div class="section-content">
+            <dl class="detail-group">
+
+              <div class="detail-item">
+                <dt class="detail-label">Book Title</dt>
+                <dd class="detail-value">
+                  {{ bookTitle() }}
+                </dd>
+              </div>
+
+              <div class="detail-item">
+                <dt class="detail-label">Book ID</dt>
+                <dd class="detail-value">
+                  #{{ currentReview.bookId }}
+                </dd>
+              </div>
+
+              <div class="detail-item">
+                <dt class="detail-label">Rating</dt>
+                <dd class="detail-value">
+                  {{ currentReview.rating }}/5 Stars
+                </dd>
+              </div>
+
+              <div class="detail-item">
+                <dt class="detail-label">Review</dt>
+                <dd class="detail-value description">
+                  {{ currentReview.reviewText }}
+                </dd>
+              </div>
+
+              <div class="detail-item">
+                <dt class="detail-label">Recommended</dt>
+                <dd class="detail-value">
+                  {{ currentReview.isRecommended ? 'Yes' : 'No' }}
+                </dd>
+              </div>
+
+              <div class="detail-item">
+                <dt class="detail-label">Date Posted</dt>
+                <dd class="detail-value">
+                  {{ formattedDate() }}
+                </dd>
+              </div>
+
+            </dl>
+          </div>
+        </section>
+      </div>
+
+    }
+  }
+</div>

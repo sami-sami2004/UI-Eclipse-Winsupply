@@ -1,0 +1,400 @@
+
+@use 'sass:color';
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+// =============================================================================
+// Review Detail
+// =============================================================================
+
+.review-detail {
+  padding: $spacing-md;
+  background: linear-gradient(
+    135deg,
+    rgba($primary-color, 0.02) 0%,
+    rgba($success-color, 0.01) 100%
+  );
+  min-height: 100vh;
+
+  @include responsive-container($container-xl);
+
+  @include mobile-only {
+    padding: $spacing-sm;
+  }
+}
+
+// =============================================================================
+// Navigation Header
+// =============================================================================
+
+.navigation-header {
+  @include flex-between;
+  align-items: center;
+  margin-bottom: $spacing-lg;
+  padding: $spacing-md;
+  background: white;
+  border-radius: $border-radius-xl;
+  box-shadow: $shadow-sm;
+  border: 1px solid $border-light;
+
+  @include mobile-only {
+    flex-direction: column;
+    gap: $spacing-md;
+    align-items: stretch;
+  }
+}
+
+.breadcrumb-nav {
+  flex: 1;
+
+  .breadcrumb-list {
+    @include flex-row-center;
+    gap: $spacing-sm;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    flex-wrap: wrap;
+
+    @include mobile-only {
+      justify-content: center;
+    }
+  }
+
+  .breadcrumb-item {
+    @include flex-row-center;
+    gap: $spacing-xs;
+
+    &.breadcrumb-current {
+      color: $primary-color;
+      font-weight: $font-weight-semibold;
+    }
+  }
+
+  .breadcrumb-link {
+    @include flex-row-center;
+    gap: $spacing-xs;
+    color: $secondary-color;
+    text-decoration: none;
+    padding: $spacing-xs $spacing-sm;
+    border-radius: $border-radius-md;
+    transition: all $transition-fast;
+
+    &:hover {
+      color: $primary-color;
+      background: rgba($primary-color, 0.1);
+    }
+
+    &:focus {
+      @include focus-ring($primary-color);
+    }
+  }
+
+  .breadcrumb-separator {
+    color: $border-medium;
+    font-weight: $font-weight-bold;
+    user-select: none;
+  }
+}
+
+.header-actions {
+  @include flex-row-center;
+  gap: $spacing-sm;
+
+  @include mobile-only {
+    justify-content: center;
+  }
+}
+
+// =============================================================================
+// Review Header
+// =============================================================================
+
+.review-header {
+  background: white;
+  border-radius: $border-radius-xl;
+  box-shadow: $shadow-md;
+  border: 1px solid $border-light;
+  margin-bottom: $spacing-lg;
+  overflow: hidden;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(
+      90deg,
+      $primary-color 0%,
+      $success-color 50%,
+      $warning-color 100%
+    );
+  }
+
+  .header-content {
+    padding: $spacing-lg;
+    position: relative;
+    z-index: 1;
+  }
+
+  .title-section {
+    text-align: center;
+  }
+
+  .review-title {
+    font-size: clamp($font-size-xl, 4vw, $font-size-3xl);
+    font-weight: $font-weight-bold;
+    color: $dark-gray;
+    margin: 0 0 $spacing-md 0;
+    line-height: $line-height-tight;
+  }
+
+  .review-meta {
+    @include flex-row-center;
+    justify-content: center;
+    gap: $spacing-lg;
+    flex-wrap: wrap;
+
+    @include mobile-only {
+      flex-direction: column;
+      gap: $spacing-sm;
+    }
+  }
+
+  .meta-item {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    color: $primary-color;
+    background: rgba($primary-color, 0.1);
+    padding: $spacing-xs $spacing-sm;
+    border-radius: $border-radius-md;
+    border: 1px solid rgba($primary-color, 0.2);
+  }
+}
+
+// =============================================================================
+// Loading & Error States
+// =============================================================================
+
+.loading-section,
+.error-section {
+  @include flex-center;
+  flex-direction: column;
+  min-height: 200px;
+  padding: $spacing-xl;
+  text-align: center;
+  background: white;
+  border-radius: $border-radius-xl;
+  box-shadow: $shadow-sm;
+  border: 1px solid $border-light;
+  margin-bottom: $spacing-lg;
+}
+
+.loading-section {
+  color: $secondary-color;
+  font-size: $font-size-base;
+}
+
+.error-section {
+  gap: $spacing-md;
+
+  h2 {
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    color: $error-color;
+    margin: 0;
+  }
+
+  p {
+    color: $secondary-color;
+    font-size: $font-size-base;
+    margin: 0;
+  }
+}
+
+// =============================================================================
+// Review Content
+// =============================================================================
+
+.review-content {
+  display: grid;
+  gap: $spacing-lg;
+  grid-template-columns: 1fr;
+}
+
+.content-section {
+  background: white;
+  border-radius: $border-radius-xl;
+  box-shadow: $shadow-sm;
+  border: 1px solid $border-light;
+  overflow: hidden;
+  transition: all $transition-normal;
+
+  &:hover {
+    box-shadow: $shadow-md;
+    transform: translateY(-2px);
+  }
+}
+
+.section-header {
+  background: linear-gradient(
+    135deg,
+    $primary-color 0%,
+    color.adjust($primary-color, $hue: 20deg) 100%
+  );
+  color: white;
+  padding: $spacing-md $spacing-lg;
+
+  .section-title {
+    @include flex-row-center;
+    gap: $spacing-sm;
+    font-size: $font-size-lg;
+    font-weight: $font-weight-bold;
+    margin: 0;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.section-content {
+  padding: $spacing-lg;
+}
+
+// =============================================================================
+// Review Overview
+// =============================================================================
+
+.detail-group {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+  margin: 0;
+}
+
+.detail-item {
+  padding: $spacing-md;
+  background: linear-gradient(
+    135deg,
+    rgba($primary-color, 0.02) 0%,
+    white 100%
+  );
+  border-radius: $border-radius-lg;
+  border-left: 3px solid $primary-color;
+  transition: all $transition-normal;
+
+  &:hover {
+    background: rgba($primary-color, 0.05);
+    border-left-color: color.adjust(
+      $primary-color,
+      $lightness: -10%
+    );
+  }
+
+  .detail-label {
+    font-weight: $font-weight-semibold;
+    color: $primary-color;
+    font-size: $font-size-xs;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: $spacing-xs;
+    display: block;
+  }
+
+  .detail-value {
+    color: $dark-gray;
+    font-size: $font-size-base;
+    line-height: $line-height-normal;
+    margin: 0;
+    overflow-wrap: anywhere;
+
+    &.description {
+      font-size: $font-size-sm;
+      line-height: $line-height-relaxed;
+      white-space: pre-wrap;
+    }
+  }
+}
+
+// =============================================================================
+// Button Styles
+// =============================================================================
+
+.btn {
+  @include button-base;
+  @include button-size('md');
+  @include touch-target;
+
+  &.btn-primary {
+    @include button-variant($primary-color);
+  }
+
+  &.btn-secondary {
+    @include button-outline($secondary-color);
+  }
+
+  &.btn-back {
+    @include flex-row-center;
+    gap: $spacing-sm;
+  }
+}
+
+// =============================================================================
+// Responsive Enhancements
+// =============================================================================
+
+@include mobile-only {
+  .review-detail {
+    padding: $spacing-sm;
+  }
+
+  .navigation-header {
+    padding: $spacing-sm;
+  }
+
+  .review-header .header-content {
+    padding: $spacing-md;
+  }
+
+  .section-content {
+    padding: $spacing-md;
+  }
+
+  .detail-item {
+    padding: $spacing-sm;
+  }
+}
+
+// =============================================================================
+// Accessibility Enhancements
+// =============================================================================
+
+.btn:focus,
+.breadcrumb-link:focus {
+  @include focus-ring;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .content-section,
+  .detail-item {
+    transition: none;
+  }
+
+  .content-section:hover {
+    transform: none;
+  }
+}
+
+@media (prefers-contrast: high) {
+  .review-header::before {
+    background: $primary-color;
+  }
+
+  .section-header {
+    background: $primary-color;
+  }
+
+  .detail-item {
+    border-left-color: $primary-color;
+  }
+}
