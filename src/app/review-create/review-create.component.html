@@ -1,0 +1,171 @@
+
+<!--
+  Create review. Reactive form bound to reviewForm in the component.
+  Uses fieldState() for validation messages.
+-->
+<div class="work-order-form">
+  <div class="form-header">
+    <div class="header-content">
+      <div class="breadcrumb-nav">
+        <a routerLink="/dashboard" class="breadcrumb-link">Dashboard</a>
+        <span class="breadcrumb-separator">›</span>
+        <a routerLink="/review/list" class="breadcrumb-link">Reviews</a>
+        <span class="breadcrumb-separator">›</span>
+        <span class="breadcrumb-current">Create New</span>
+      </div>
+
+      <div class="header-main">
+        <h1 class="form-title">
+          <span class="title-icon">➕</span>
+          Create Review
+        </h1>
+        <p class="form-description">
+          Share your thoughts about a book. All fields are required.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-container">
+    <form
+      [formGroup]="reviewForm"
+      (ngSubmit)="onSubmit()"
+      class="work-order-form">
+
+      <!-- Review Details -->
+      <div class="form-section">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span class="section-icon">📖</span>
+            Review Details
+          </h2>
+        </div>
+
+        <div class="form-grid">
+
+          <!-- Book -->
+          <div class="form-field">
+            <label for="bookId" class="field-label required">
+              Book
+            </label>
+            <select
+              id="bookId"
+              class="field-select"
+              [class.invalid]="fieldState().bookId.invalid"
+              formControlName="bookId"
+              [attr.aria-invalid]="fieldState().bookId.invalid"
+              [attr.aria-describedby]="fieldState().bookId.invalid ? 'bookId-error' : null">
+              <option [ngValue]="0">Select book...</option>
+              @for (book of books(); track book.bookId) {
+                <option [ngValue]="book.bookId">
+                  {{ book.title }}
+                </option>
+              }
+            </select>
+            @if (fieldState().bookId.invalid) {
+              <div id="bookId-error" class="field-error">
+                {{ fieldState().bookId.message }}
+              </div>
+            }
+          </div>
+
+          <!-- Rating -->
+          <div class="form-field">
+            <label for="rating" class="field-label required">
+              Rating
+            </label>
+            <select
+              id="rating"
+              class="field-select"
+              [class.invalid]="fieldState().rating.invalid"
+              formControlName="rating"
+              [attr.aria-invalid]="fieldState().rating.invalid"
+              [attr.aria-describedby]="fieldState().rating.invalid ? 'rating-error' : null">
+              <option [ngValue]="0">Select rating...</option>
+              <option [ngValue]="1">1 Star</option>
+              <option [ngValue]="2">2 Stars</option>
+              <option [ngValue]="3">3 Stars</option>
+              <option [ngValue]="4">4 Stars</option>
+              <option [ngValue]="5">5 Stars</option>
+            </select>
+            @if (fieldState().rating.invalid) {
+              <div id="rating-error" class="field-error">
+                {{ fieldState().rating.message }}
+              </div>
+            }
+          </div>
+
+          <!-- Review Text -->
+          <div class="form-field form-field-full">
+            <label for="reviewText" class="field-label required">
+              Review
+            </label>
+            <textarea
+              id="reviewText"
+              class="field-textarea"
+              [class.invalid]="fieldState().reviewText.invalid"
+              formControlName="reviewText"
+              rows="5"
+              placeholder="What did you think about this book?"
+              [attr.aria-invalid]="fieldState().reviewText.invalid"
+              [attr.aria-describedby]="fieldState().reviewText.invalid ? 'reviewText-error' : null"></textarea>
+            @if (fieldState().reviewText.invalid) {
+              <div id="reviewText-error" class="field-error">
+                {{ fieldState().reviewText.message }}
+              </div>
+            }
+          </div>
+
+          <!-- Recommended -->
+          <div class="form-field">
+            <label for="isRecommended" class="field-label required">
+              Would You Recommend This Book?
+            </label>
+            <select
+              id="isRecommended"
+              class="field-select"
+              formControlName="isRecommended">
+              <option [ngValue]="null">Select an option...</option>
+              <option [ngValue]="true">Yes</option>
+              <option [ngValue]="false">No</option>
+            </select>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="form-actions">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="onCancel()">
+          Cancel
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-outline"
+          (click)="onReset()">
+          Reset
+        </button>
+
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="isSubmitting()">
+          <span class="btn-icon">➕</span>
+          Create Review
+        </button>
+      </div>
+
+      @if (errorMessage()) {
+        <div class="alert alert-error" role="alert">
+          <span class="alert-icon">⚠️</span>
+          {{ errorMessage() }}
+        </div>
+      }
+
+    </form>
+  </div>
+</div>
