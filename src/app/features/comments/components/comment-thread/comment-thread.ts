@@ -2,6 +2,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommentService } from '../../services/comment.service';
 import { CommentCard } from '../comment-card/comment-card';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   imports: [CommentCard],
@@ -13,9 +14,10 @@ export class CommentThread {
   private commentService = inject(CommentService);
   private route = inject(ActivatedRoute);
 
-  reviewId = Number(this.route.snapshot.paramMap.get('reviewId'));
+  private paramMap = toSignal(this.route.paramMap);
+  reviewId = computed(() => Number(this.paramMap()?.get('reviewId')));
   comments = computed(() =>
-    this.commentService.comments().filter(c => c.reviewId === this.reviewId)
+    this.commentService.comments().filter(c => c.reviewId === this.reviewId())
   );
 
   newCommentText = signal('');
@@ -25,7 +27,7 @@ export class CommentThread {
   }
 
   addComment(): void {
-    this.commentService.addComment(this.reviewId, this.newCommentText());
+    this.commentService.addComment(this.reviewId(), this.newCommentText());
     this.newCommentText.set('');
   }
 

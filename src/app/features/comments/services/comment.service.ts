@@ -1,7 +1,7 @@
 import { Injectable, signal } from '@angular/core';
 import { BookComment } from '../models/book-comment';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class CommentService {
   private readonly _comments = signal<BookComment[]>([
     {
@@ -40,6 +40,4 @@ export class CommentService {
         {id: Date.now(), reviewId, author: 'You', text: trimmed, createdAt: new Date().toISOString()},
     ]);
   }
-
-  constructor() {}
 }

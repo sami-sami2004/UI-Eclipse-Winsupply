@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CommentThread } from './comment-thread';
 
+
 describe('CommentThread', () => {
   let component: CommentThread;
   let fixture: ComponentFixture<CommentThread>;
