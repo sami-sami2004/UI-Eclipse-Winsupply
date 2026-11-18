@@ -1,0 +1,17 @@
+<div class="main">
+<div class="review-card">
+    <h3>{{ review().bookTitle }}</h3>
+
+    <p>Genre: {{ review().genre }}</p>
+
+    <p>{{ review().reviewText }}</p>
+
+    <p>Rating: {{ review().rating }}/5</p>
+
+    @if (review().isRecommended) {
+        <p>Recommended</p>
+    } @else {
+        <p>Not Recommended</p>
+    }
+</div>
+</div>

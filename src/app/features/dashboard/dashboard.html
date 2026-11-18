@@ -1,18 +1,12 @@
 <div class="dashboard">
-    <app-genre-filter></app-genre-filter>
 
-    <app-book-list></app-book-list>
-    <h1 class="dashboardHeading">Bookish Dashboard</h1>
-    @if (books.length > 0) {
-        <p>Here are the available books</p>
-        <ul>
-        @for (book of books; track book.id){
-            <li>{{book.name}}</li>
-        }
-        </ul>
+    <h2>Reviews</h2>
+    <div class="review-list">
+    @for (review of recentReviews; track review.reviewId) {
+    <app-review-detail-card [review]="review" />
+    } @empty {
+    <p>No reviews found.</p>
     }
-    @else {
-        <p>No books found.</p>
-    }
+    </div>
+
 </div>
-

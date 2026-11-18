@@ -1,18 +1,24 @@
-import { Component } from '@angular/core';
-import { GenreFilter } from './components/genre-filter/genre-filter';
-import { BookList } from './components/book-list/book-list';
+import { Component,inject,signal } from '@angular/core';
+// import { GenreFilter } from './components/genre-filter/genre-filter';
+import {ReviewDetailCard} from './components/review-detail-card/review-detail-card';
+import { ReviewService } from '../../services/review';
 
 @Component({
-  imports: [GenreFilter, BookList],
+  imports: [ ReviewDetailCard],
   selector: 'app-dashboard',
   styleUrl: './dashboard.scss',
   templateUrl: './dashboard.html',
 })
 export class Dashboard {
-  books = [
-    { id: 1, name: 'The Hobbit' },
-    { id: 2, name: 'Atomic Habits' },
-    { id: 3, name: 'The Alchemist' },
-  ];
-  // books = [];
+  reviewService = inject(ReviewService);
+
+  searchText = signal('');
+  selectedGenre = signal('All');
+
+
+  get recentReviews() {
+    return this.reviewService.reviews();
+  }
 }
+
+
