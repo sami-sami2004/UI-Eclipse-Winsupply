@@ -1,5 +1,14 @@
 <div class="dashboard">
 
+    <div class="search-container">
+        <input
+            type="text"
+            placeholder="Search by genre..."
+            [value]="searchText()"
+            (input)="searchText.set($any($event.target).value)"
+        />
+    </div>
+
     <h2>Reviews</h2>
     <div class="review-list">
     @for (review of recentReviews; track review.reviewId) {

@@ -1,5 +1,7 @@
-
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal,inject } from '@angular/core';
+import { Observable } from 'rxjs';
+import { ApiService } from './api.service';
+import { map } from 'rxjs/operators';
 
 export interface Review {
   reviewId: number;
@@ -10,37 +12,23 @@ export interface Review {
   isRecommended: boolean;
 }
 
+export interface BackendReview {
+  reviewId: number;
+  bookId: number;
+  reviewText: string;
+  rating: number;
+  isRecommended: boolean;
+  datePosted: number[];
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class ReviewService {
 
-    reviews = signal<Review[]>([
-    {
-        reviewId: 1,
-        bookTitle: 'The Hobbit',
-        genre: 'Fantasy',
-        reviewText: 'An amazing adventure with a wonderful story.',
-        rating: 5,
-        isRecommended: true
-    },
-    {
-        reviewId: 2,
-        bookTitle: 'Atomic Habits',
-        genre: 'Self-Help',
-        reviewText: 'Very useful ideas for building better habits.',
-        rating: 4,
-        isRecommended: true
-    },
-    {
-        reviewId: 3,
-        bookTitle: 'The Alchemist',
-        genre: 'Fiction',
-        reviewText: 'An interesting story about following your dreams.',
-        rating: 4,
-        isRecommended: true
-    }
-    ]);
+    private apiService = inject(ApiService);
+
+    reviews = signal<Review[]>([]);
 
     addReview(review: Review) {
     this.reviews.update(reviews => [
@@ -51,4 +39,10 @@ export class ReviewService {
         }
     ]);
     }
+
+    getReviews(): Observable<BackendReview[]> {
+  return this.apiService.get<BackendReview[]>('review').pipe(
+    map(response => response.data)
+  );
+}
 }
