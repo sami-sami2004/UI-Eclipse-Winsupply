@@ -10,9 +10,14 @@
   />
   <button type="button" (click)="addComment()">Submit</button>
 </div>
-  @for (comment of comments(); track comment.id) {
-    <app-comment-card [comment]="comment" />
+  @for (comment of comments(); track comment.commentId) {
+    <app-comment-card [comment]="comment" [number]="$index + 1" />
   } @empty {
     <p>No comments yet.</p>
   }
+
+  @for (comment of myComments(); track comment.commentId) {
+    <app-comment-card [comment]="comment" [number]="comments().length +  $index + 1" />
+  }
 </section>
+

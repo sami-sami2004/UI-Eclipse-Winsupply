@@ -1,8 +1,9 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { switchMap } from 'rxjs';
 import { CommentService } from '../../services/comment.service';
 import { CommentCard } from '../comment-card/comment-card';
-import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   imports: [CommentCard],
@@ -15,10 +16,17 @@ export class CommentThread {
   private route = inject(ActivatedRoute);
 
   private paramMap = toSignal(this.route.paramMap);
-  reviewId = computed(() => Number(this.paramMap()?.get('reviewId')));
-  comments = computed(() =>
-    this.commentService.comments().filter(c => c.reviewId === this.reviewId())
-  );
+    reviewId = computed(() => Number(this.paramMap()?.get('reviewId')));
+  
+    comments = toSignal(
+      toObservable(this.reviewId).pipe(
+        switchMap(id => this.commentService.getComments(id))
+      ),
+      {initialValue: []}
+    )
+
+myComments = computed(() => this.commentService.localComments().filter(c => c.reviewId === this.reviewId()));
+
 
   newCommentText = signal('');
 

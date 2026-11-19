@@ -1,5 +1,5 @@
 <article class="comment-card">
-  <h3>{{ comment().author }}</h3>
-  <p>{{ comment().text }}</p>
-  <small>{{ comment().createdAt | date: 'short' }}</small>
+  <h3>Comment #{{ number() }}</h3>
+  <p>{{ comment().commentText }}</p>
+  <small>{{ comment().datePosted | date: 'short' }}</small>
 </article>

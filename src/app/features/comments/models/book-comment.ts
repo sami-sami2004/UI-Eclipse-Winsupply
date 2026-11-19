@@ -1,7 +1,6 @@
 export interface BookComment {
-    id: number;
+    commentId: number;
     reviewId: number;
-    author: string;
-    text: string;
-    createdAt: string;
+    commentText: string;
+    datePosted: string;
 }

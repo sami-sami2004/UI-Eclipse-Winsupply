@@ -10,4 +10,5 @@ import { BookComment } from '../../models/book-comment';
 })
 export class CommentCard {
   comment = input.required<BookComment>();
+  number = input<number>();
 }
