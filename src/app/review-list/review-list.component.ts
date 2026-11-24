@@ -174,7 +174,8 @@ export class ReviewListComponent implements OnInit {
           this.errorMessage.set(
             'Failed to load reviews. Please try again.'
           );
-          this.reviews.set([]);
+          /*this.reviews.set([]);*/
+          this.reviews = signal<Review[]>([])
           this.applyFilters(true);
           this.isLoading.set(false);
         }
@@ -224,6 +225,14 @@ export class ReviewListComponent implements OnInit {
       : sortValue;
 
     const ascending = !sortValue.startsWith('-');
+
+    const update = this.updateFilter.value;
+
+    if (rating !== 'all') {
+      filtered = filtered.filter(
+        review => review.update === String(update)
+      );
+    }
 
     filtered.sort((a, b) =>
       this.compareReviews(a, b, sortField, ascending)

@@ -52,7 +52,7 @@
     </div>
 
     <div class="card-body"
-         [class.collapsed]="filtersCollapsed()">
+        [class.collapsed]="filtersCollapsed()">
 
       <!-- Search Controls -->
       <div class="search-section">
@@ -86,7 +86,7 @@
           <!-- Recommendation Filter -->
           <div class="filter-group">
             <label for="recommendation-filter"
-                   class="filter-label">
+                  class="filter-label">
               Recommendation
             </label>
 
@@ -106,7 +106,7 @@
           <!-- Rating Filter -->
           <div class="filter-group">
             <label for="rating-filter"
-                   class="filter-label">
+                  class="filter-label">
               Rating
             </label>
 
@@ -126,7 +126,7 @@
           <!-- Sort -->
           <div class="filter-group">
             <label for="sort-control"
-                   class="filter-label">
+                  class="filter-label">
               Sort By
             </label>
 
@@ -215,7 +215,7 @@
         <div class="card-actions">
           <div class="page-size-selector">
             <label for="page-size"
-                   class="page-size-label">
+                  class="page-size-label">
               Items per page:
             </label>
 
@@ -237,7 +237,8 @@
 
         <!-- Review Cards -->
         @if (filteredReviews().length > 0) {
-          <div class="reviews-grid">
+          <!--<div class="reviews-grid">-->
+          <app-review-card [review]="review" />
 
             @for (review of filteredReviews(); track review.reviewId) {
               <div class="review-card">
@@ -338,7 +339,7 @@
           <!-- Pagination Controls -->
           @if (totalPages() > 1) {
             <nav class="pagination"
-                 aria-label="Review pagination">
+                aria-label="Review pagination">
 
               <button
                 type="button"

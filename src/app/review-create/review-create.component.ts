@@ -2,7 +2,7 @@
 /**
  * Create review page. Route `/review/create`.
  *
- * Create Book → receive bookId → Create Review.
+ * Create Book - receive bookId - Create Review.
  */
 
 import {
@@ -32,6 +32,7 @@ import {
   ReviewService,
   ReviewCreateRequest
 } from '../services/review-list.service';
+import { LookupService } from '../services/lookup.service';
 
 interface Genre {
   genreId: number;
@@ -183,7 +184,6 @@ export class ReviewCreateComponent implements OnInit {
       .subscribe(() => this.formEpoch.update(n => n + 1));
   }
 
-
   ngOnInit(): void {
     this.loadGenres();
   }
@@ -191,7 +191,7 @@ export class ReviewCreateComponent implements OnInit {
   private loadGenres(): void {
     this.http
       .get<Genre[] | { data: Genre[] }>(
-        'http://localhost:8080/bookish/genres'
+        
       )
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({

@@ -51,6 +51,10 @@ export class ReviewService {
         ) / reviews.length
       : 0;
 
+    const update = reviews.filter(
+      review => review.update === String(update)
+    ).length;
+
     return {
       totalReviews: reviews.length,
       recommendedReviews: recommended,
