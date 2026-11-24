@@ -26,13 +26,14 @@ import {
 
 import { HttpClient } from '@angular/common/http';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { merge, switchMap, map } from 'rxjs';
+import { merge, switchMap} from 'rxjs';
 
 import {
   ReviewService,
   ReviewCreateRequest
 } from '../services/review-list.service';
 import { LookupService } from '../services/lookup.service';
+import { ApiService } from '../services/api.service';
 
 interface Genre {
   genreId: number;
@@ -96,6 +97,8 @@ export class ReviewCreateComponent implements OnInit {
 
   private readonly destroyRef = inject(DestroyRef);
   private readonly reviewService = inject(ReviewService);
+  private readonly lookupService = inject(LookupService);
+  private readonly api = inject(ApiService);
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
 
@@ -189,10 +192,7 @@ export class ReviewCreateComponent implements OnInit {
   }
 
   private loadGenres(): void {
-    this.http
-      .get<Genre[] | { data: Genre[] }>(
-        
-      )
+    this.lookupService.getGenres()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: response => {
@@ -212,6 +212,7 @@ export class ReviewCreateComponent implements OnInit {
   }
 
   onSubmit(): void {
+
     if (this.isSubmitting()) {
       return;
     }
@@ -239,14 +240,11 @@ export class ReviewCreateComponent implements OnInit {
       pageCount: Number(raw.pageCount)
     };
 
-    this.http.post<Book>(
-      'http://localhost:8080/bookish/book',
-      bookRequest
-    )
+    this.api.post<Book>('book', bookRequest)
       .pipe(
         switchMap(book => {
           const reviewRequest: ReviewCreateRequest = {
-            bookId: book.bookId,
+            bookId: book.data.bookId,
             rating: raw.rating,
             reviewText: raw.reviewText.trim(),
             isRecommended: raw.isRecommended!
