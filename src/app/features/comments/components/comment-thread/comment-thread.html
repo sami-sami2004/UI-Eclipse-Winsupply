@@ -1,23 +1,19 @@
 <section class="comment-thread">
   <h2>Comments</h2>
 
-  <div class="comment-form">
-  <input
+  <form class="comment-form" (submit)="$event.preventDefault(); addComment()">
+    <input
     type="text"
     placeholder="Add a comment..."
     [value]="newCommentText()"
-    (input)="onInput($event)"
-  />
-  <button type="button" (click)="addComment()">Submit</button>
-</div>
-  @for (comment of comments(); track comment.commentId) {
-    <app-comment-card [comment]="comment" [number]="$index + 1" />
+    (input)="onInput($event)"/>
+    <button type="submit">Submit</button>
+  </form>
+
+  @for (comment of allComments(); track comment.commentId) {
+    <app-comment-card [comment]="comment" [number]="$index + 1"></app-comment-card>
   } @empty {
     <p>No comments yet.</p>
-  }
-
-  @for (comment of myComments(); track comment.commentId) {
-    <app-comment-card [comment]="comment" [number]="comments().length +  $index + 1" />
   }
 </section>
 

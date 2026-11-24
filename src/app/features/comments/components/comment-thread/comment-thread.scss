@@ -52,17 +52,18 @@ h2 {
     background: var(--off-white);
     border: 1px solid var(--sage);
     border-radius: 999px;
-  }
+  
 
   &::placeholder {
     color: var(--sage);
   }
-
   &:focus {
     outline: none;
     border-color: var(--dusty-olive);
     box-shadow: 0 0 0 3px var(--light-sage);
   }
+}
+
 }
 
 button {
