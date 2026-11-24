@@ -27,4 +27,17 @@ export class ApiService {
       }))
     );
   }
+  post<T>(endpoint: string, body: unknown): Observable<ApiResponse<T>> {
+    return this.http.post<T>(`${this.baseUrl}/${endpoint}`, body).pipe(
+      map(data => ({
+        success: data != null,
+        data,
+        timestamp: new Date()
+      }))
+    );
+  }
+
+  delete(endpoint: string): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${endpoint}`);
+  }
 }

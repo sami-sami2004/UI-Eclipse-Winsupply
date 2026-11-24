@@ -18,6 +18,7 @@ export class Dashboard {
   private readonly genresService = inject(GenresService);
 
   readonly searchText = signal('');
+  readonly deletedReviewIds = signal<number[]>([]);
 
   private readonly allReviews = toSignal(
     forkJoin({
@@ -49,14 +50,25 @@ export class Dashboard {
 
   readonly recentReviews = computed(() => {
     const search = this.searchText().toLowerCase().trim();
-    const reviews = this.allReviews();
-    if (!search) {
-      return reviews;
-    }
-    return reviews.filter(review => review.genre.toLowerCase().includes(search));
+    
+    return this.allReviews()
+    .filter(review => !this.deletedReviewIds().includes(review.reviewId))
+    .filter(review => review.genre.toLowerCase().includes(search));
   });
 
   onSearchInput(event: Event): void {
     this.searchText.set((event.target as HTMLInputElement).value);
   }
+
+  onDeleteReview(reviewId: number): void {
+  this.reviewService.deleteReview(reviewId).subscribe({
+    next: () => {
+      this.deletedReviewIds.update(ids => [...ids, reviewId]);
+    },
+    error: error => {
+      console.error('Error deleting review:', error);
+      alert('Could not delete review. Please try again.');
+    }
+  });
+}
 }

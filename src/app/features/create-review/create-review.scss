@@ -1,0 +1,101 @@
+
+.create-review {
+  max-width: 650px;
+  margin: 40px auto;
+  padding: 30px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+
+  h2 {
+    margin-bottom: 25px;
+    color: #173f35;
+    font-size: 28px;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #333333;
+  }
+
+  input,
+  select,
+  textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 7px;
+    font-size: 15px;
+    box-sizing: border-box;
+    background: #ffffff;
+  }
+
+  textarea {
+    min-height: 130px;
+    resize: vertical;
+  }
+
+  input:focus,
+  select:focus,
+  textarea:focus {
+    outline: none;
+    border-color: #26735d;
+    box-shadow: 0 0 0 2px rgba(38, 115, 93, 0.12);
+  }
+
+  p {
+    margin-top: 6px;
+    color: #c0392b;
+    font-size: 13px;
+  }
+
+  .error-message {
+    padding: 12px;
+    background: #fee2e2;
+    border-radius: 6px;
+  }
+
+  .success-message {
+    padding: 12px;
+    color: #166534;
+    background: #dcfce7;
+    border-radius: 6px;
+  }
+
+  button {
+    padding: 13px;
+    background: #173f35;
+    color: white;
+    border: none;
+    border-radius: 7px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background: #245b4b;
+  }
+
+  button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+@media (max-width: 700px) {
+  .create-review {
+    margin: 20px 12px;
+    padding: 20px;
+  }
+}
+ 

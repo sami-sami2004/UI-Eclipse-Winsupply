@@ -1,0 +1,74 @@
+
+<div class="create-review">
+  <h2>Write a Review</h2>
+
+  <form [formGroup]="reviewForm" (ngSubmit)="onSubmit()">
+
+    <div>
+      <label for="bookId">Select Book</label>
+      <select id="bookId" formControlName="bookId">
+        <option value="">Choose a book</option>
+        @for (book of books(); track book.bookId) {
+          <option [value]="book.bookId">{{ book.title }}</option>
+        }
+      </select>
+
+      @if (reviewForm.controls.bookId.touched && reviewForm.controls.bookId.invalid) {
+        <p>Please select a book.</p>
+      }
+    </div>
+
+    <div>
+      <label for="reviewText">Review</label>
+      <textarea
+        id="reviewText"
+        formControlName="reviewText"
+        placeholder="Write your review..."
+      ></textarea>
+
+      @if (reviewForm.controls.reviewText.touched && reviewForm.controls.reviewText.hasError('required')) {
+        <p>Review text is required.</p>
+      }
+
+      @if (reviewForm.controls.reviewText.touched && reviewForm.controls.reviewText.hasError('minlength')) {
+        <p>Review must contain at least 10 characters.</p>
+      }
+    </div>
+
+    <div>
+      <label for="rating">Rating (1–5)</label>
+      <input
+        id="rating"
+        type="number"
+        min="1"
+        max="5"
+        formControlName="rating"
+      />
+
+      @if (reviewForm.controls.rating.touched && reviewForm.controls.rating.invalid) {
+        <p>Please enter a rating between 1 and 5.</p>
+      }
+    </div>
+
+    <div>
+      <label for="isRecommended">Would you recommend this book?</label>
+      <select id="isRecommended" formControlName="isRecommended">
+        <option value="true">Yes</option>
+        <option value="false">No</option>
+      </select>
+    </div>
+
+    @if (errorMessage()) {
+      <p class="error-message">{{ errorMessage() }}</p>
+    }
+
+    @if (successMessage()) {
+      <p class="success-message">{{ successMessage() }}</p>
+    }
+
+    <button type="submit" [disabled]="isSubmitting()">
+      {{ isSubmitting() ? 'Submitting...' : 'Submit Review' }}
+    </button>
+
+  </form>
+</div>

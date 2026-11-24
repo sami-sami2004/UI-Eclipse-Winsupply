@@ -1,0 +1,32 @@
+
+.main-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 40px;
+  background-color: #173f35;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+
+  a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 600;
+    transition: color 0.2s ease;
+  }
+
+  a:first-child {
+    font-size: 23px;
+    letter-spacing: 0.5px;
+  }
+
+  a:hover {
+    color: #b7e4cf;
+  }
+}
+
+@media (max-width: 600px) {
+  .main-nav {
+    padding: 16px 20px;
+  }
+}

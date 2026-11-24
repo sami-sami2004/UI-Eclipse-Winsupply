@@ -1,4 +1,4 @@
-import { Component,input } from '@angular/core';
+import { Component,input,output } from '@angular/core';
 import { Review } from '../../../../services/review';
 
 @Component({
@@ -9,4 +9,5 @@ import { Review } from '../../../../services/review';
 })
 export class ReviewDetailCard {
     review = input.required<Review>();
+    delete = output<number>();
 }

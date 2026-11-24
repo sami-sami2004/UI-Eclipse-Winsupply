@@ -21,6 +21,14 @@ export interface BackendReview {
   datePosted: number[];
 }
 
+export interface CreateReviewRequest {
+  bookId: number;
+  reviewText: string;
+  rating: number;
+  isRecommended: boolean;
+  datePosted: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -45,4 +53,13 @@ export class ReviewService {
     map(response => response.data)
   );
 }
+createReview(review: CreateReviewRequest): Observable<BackendReview> {
+    return this.apiService.post<BackendReview>('review', review).pipe(
+      map(response => response.data)
+    );
+  }
+
+  deleteReview(reviewId: number): Observable<void> {
+    return this.apiService.delete(`review/${reviewId}`);
+  }
 }
