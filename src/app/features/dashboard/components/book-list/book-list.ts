@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
+import {GenreFilter} from '../genre-filter/genre-filter';
 
 @Component({
-  imports: [],
+  imports: [GenreFilter],
   selector: 'app-book-list',
   styleUrl: './book-list.scss',
   templateUrl: './book-list.html',
