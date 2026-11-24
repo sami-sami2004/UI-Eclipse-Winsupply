@@ -11,17 +11,23 @@ import {
   computed,
   signal,
   inject,
-  DestroyRef
+  DestroyRef,
+  effect
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import {
   debounceTime,
   distinctUntilChanged,
   combineLatest,
-  startWith
+  startWith,
+  Subject,
+  switchMap,
+  catchError,
+  of,
+  tap
 } from 'rxjs';
 
 import {
@@ -35,7 +41,8 @@ import {
  * Review list. Route: /review/list.
  *
  * Data path:
- * ngOnInit -> ReviewService.reloadReviews()
+ * ngOnInit -> loadReviews() -> ReviewService.reloadReviews()
+ * Observable -> toSignal() -> reviews()
  * Reactive filters -> applyFilters() -> applyPagination()
  */
 @Component({
@@ -53,7 +60,6 @@ export class ReviewListComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
   private readonly reviewService = inject(ReviewService);
 
-  readonly reviews = signal<Review[]>([]);
   private readonly filteredAll = signal<Review[]>([]);
   readonly filteredReviews = signal<Review[]>([]);
 
@@ -62,6 +68,33 @@ export class ReviewListComponent implements OnInit {
   readonly totalCount = signal(0);
   readonly currentPage = signal(1);
   readonly pageSize = signal(10);
+
+  // Triggers a new GET request when reviews are refreshed.
+  private readonly refresh$ = new Subject<void>();
+
+  // Converts the review Observable into a signal.
+  readonly reviews = toSignal(
+    this.refresh$.pipe(
+      switchMap(() => {
+        this.isLoading.set(true);
+        this.errorMessage.set(null);
+
+        return this.reviewService.reloadReviews().pipe(
+          catchError(error => {
+            console.error('Failed to load reviews:', error);
+
+            this.errorMessage.set(
+              'Failed to load reviews. Please try again.'
+            );
+
+            return of([] as Review[]);
+          }),
+          tap(() => this.isLoading.set(false))
+        );
+      })
+    ),
+    { initialValue: [] }
+  );
 
   readonly filtersCollapsed = signal(false);
 
@@ -118,6 +151,14 @@ export class ReviewListComponent implements OnInit {
     )
   );
 
+  // Updates the filtered list when new reviews are received.
+  constructor() {
+    effect(() => {
+      this.reviews();
+      this.applyFilters(true);
+    });
+  }
+  
   ngOnInit(): void {
     this.setupFilters();
     this.loadReviews();
@@ -157,28 +198,7 @@ export class ReviewListComponent implements OnInit {
    * Loads reviews from Bookish.
    */
   private loadReviews(): void {
-    this.isLoading.set(true);
-    this.errorMessage.set(null);
-
-    this.reviewService
-      .reloadReviews()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: reviews => {
-          this.reviews.set(reviews);
-          this.applyFilters(true);
-          this.isLoading.set(false);
-        },
-        error: error => {
-          console.error('Failed to load reviews:', error);
-          this.errorMessage.set(
-            'Failed to load reviews. Please try again.'
-          );
-          this.reviews.set([]);
-          this.applyFilters(true);
-          this.isLoading.set(false);
-        }
-      });
+    this.refresh$.next();
   }
 
   /**
